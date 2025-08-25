@@ -20,15 +20,23 @@ paste this in browser
 https://lambcomp02.ccbb.utexas.edu/
   
 
-#Overview of Resrouce
+##Overview of Resrouce
 
 #Home Directory
 #Work Directory
 #scratch
 
+#Work Folder Structure:
+conda_envs -
+software - 
 
-#Conda Environments for pre compiled tasks
 
+#Using Conda -
+  #how to install to home directory
+
+#Setting up Alius to Shared Conda Environments
+
+  
 
 #Converting raw files
 #processing with Mzmine
