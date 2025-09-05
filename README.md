@@ -1,6 +1,12 @@
 #### Sedio Lab Group Metabolomics Pipeline Using the UT Austin Biomedical Research Computing Facility (BRCF) - aka Pods
 
-# Sedio Lab has access to CPU Rental Pods. To get get access 
+
+## Table of Contents
+- [Connecting to Pods](#connecting-to-cpu-rental-pods)
+  - [Connecting to a Remote Server with VS Code](#1-connecting-to-a-remote-server-with-vs-code)
+  - [Connecting to a Remote Server with Ondemand](#2-connecting-to-a-remote-server-through-the-browser-using-ondemand)
+
+# Connecting to CPU Rental Pods:
 ## 1. Connecting to a Remote Server with VS Code
 
 Visual Studio Code, a powerful and versatile code editor, can be transformed into a robust remote development environment. By connecting to a remote server, you can edit files and run commands as if you were working directly on that machine. This tutorial will guide you through connecting to a server using the popular "Remote - SSH" extension.
