@@ -116,9 +116,113 @@ Follow this link depending on which compute node you are are targeting.
 
 ## 2. Overview of Resrouce
 
-#Home Directory
-#Work Directory
-#scratch
+### Overview of POD Diskspace and storage
+
+We each are given access to three directories:
+ Home Directory - small storage - 100 GB, frequently backed up and only availble to the user.
+ Work Directory - large storage - 16 TB of data that is shared by all users in our group
+ scratch - this is a temporary directory but is a #FAST disk so if you are reading and writing lots of files in your workflow it's useful to first copy your data to scratch and process from there
+
+#### Home directory
+Your Home directory on a POD is located under /stor/home. Home directories are meant for storing small files. All home directories have a 100 GB quota.
+Home directory snapshots
+Read-only snapshots are periodically taken of your home directory contents. Like Windows backups or Macintosh Time Machine, these backups only consume disk space for files that change (are updated or deleted), in which case the previous file state is "saved" in a snapshot.
+
+Snapshots are stored in a .zfs/snapshot directory under your home directory. To see a list of the snapshots you currently have:
+
+ls ~/.zfs/snapshot
+To recover a changed or deleted file, first identify the snapshot it is in, then just copy the file from that snapshot directory to its desired location.
+
+Home directory quotas
+Your 100 GB Home directory includes snapshot data. These snapshot backups only consume disk space for files that change (are updated or deleted), in which case the previous file state is "saved" in the snapshot. Snapshots are taken frequently, so their data persists for several months even if the associated Home directory file has been deleted.
+
+The main consequence of this snapshot behavior is that they can cause your 100 GB Home directory quota to be exceeded, even after non-snapshot files have been removed.
+
+While you can view and copy files in your ~/.zfs/snapshot snapshot directories, you cannot write to them or delete them. Please contact us at rctf-support@utexas.edu to remove your snapshots if you exceed your Home directory quota.
+##### Warning: Watch Your Home Directory Size
+
+Your Home directory has a strict quota (a size limit). If you exceed it, programs may crash or refuse to start (e.g. RStudio won’t launch).
+
+Hidden sub-directories in your Home—especially those created by RStudio Server, JupyterHub, or Conda—can silently grow very large. Common culprits include:
+
+~/.local/share/rstudio
+~/.local/share/jupyter
+~/.cache
+~/.conda
+
+These folders often contain cached sessions, logs, or temporary files that can balloon into gigabytes.
+
+Run this command to see the size of the usual suspects:
+
+du -sh ~/.local/share/rstudio ~/.local/share/jupyter ~/.cache ~/.conda 2>/dev/null
+
+Example output:
+2.5G    /home/username/.local/share/rstudio
+500M    /home/username/.local/share/jupyter
+1.2G    /home/username/.cache
+
+##### Solution: Move Big Folders to Scratch
+
+If one of these folders is too big, you can move it to your Scratch area (which has much more space) and replace it with a symbolic link. This makes the program think it’s still writing to Home, but the data actually lives in Scratch.
+
+Here’s the process (example shown for RStudio):
+
+Make a new directory in Scratch:
+```bash
+mkdir -p /stor/scratch/Sedio/<yourusername>/home_extra
+```
+
+Copy the heavy folder into Scratch:
+
+```bash
+rsync -avrP ~/.local/share/rstudio/ \
+    /stor/scratch/Sedio/<yourusername>/home_extralocal_rstudio/
+```
+
+Remove the old folder in Home:
+
+```bash
+rm -rf ~/.local/share/rstudio
+```
+
+Create a symbolic link back to Home:
+```bash
+ln -sf /stor/scratch/Sedio/<yourusername>/home_extralocal_rstudio/ \
+    ~/.local/share/rstudio
+```
+That’s it — from now on, RStudio will keep writing to Scratch automatically.
+
+#### Shared Work and Scratch areas
+Shared Work and Scratch areas are available for each POD group under /stor/work/<GroupName> and /stor/scratch/<GroupName> (for example, /stor/work/Hofmann, /stor/scratch/Hofmann). These areas are accessible only by members of the named group. Users can find out which group or groups they belong to by typing the groups command on the command line.
+
+These Work and Scratch areas are designed for storage of shared project artifacts, so they have no predefined structure (i.e. user directories are not automatically created). Group members may create any directory structure that is meaningful to the group's work.
+
+Shared Work areas are backed up weekly. Scratch areas are not backed up. Both Work and Scratch areas may have quotas, depending on the POD (e.g. on the Rental or GSAF pod); such quotas are generally in the multi-terabyte range.
+
+Because it has a large quota and is regularly backed up and archived, your group's Work area is where large research artifacts that need to be preserved should be located.
+
+Scratch, on the other hand, can be used for artifacts that are transient or can easily be re-created (such as downloads from public databases).
+
+See Manage storage areas by project activity for important guidelines for Work and Scratch area contents.
+
+Weekly backups
+All Home and Work directories are backed up weekly to a separate backup storage server (spinning disk). Backups take place sometime between Friday and Monday mornings and are currently not incremental backups.
+
+Note that any directory in any file system tree named tmp, temp, or backups is not backed up. Directories with these names are intended for temporary files, especially large numbers of small temporary files. See "Cannot create tempfile" error and Avoid having too many small files.
+
+Periodic and long-term archiving
+Data on the backup server are periodically archived to TACC's Ranch tape archive roughly once a year. Current archives are as of:
+
+2025-01 (in progress)
+2024-01 (many but not all PODs)
+2022-01
+2020-07
+In addition, to avoid re-archiving the same directories multiple times, we maintain a "long term archives (LTA)" directory that contains data from projects that are no longer active. Such project data may have been transferred to a group's Scratch area to avoid consuming backup space, or may have been removed from POD storage entirely after archiving to avoid consuming storage server space.
+
+Please Contact Us if you need something retrieved from tape archives.
+
+
+
 
 #Work Folder Structure:
 conda_envs -
