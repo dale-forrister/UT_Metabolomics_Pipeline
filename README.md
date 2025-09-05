@@ -114,7 +114,7 @@ Follow this link depending on which compute node you are are targeting.
   When you are coding here you will be running on the cluster through web browser
 
 
-##3.Overview of Resrouce
+## 2. Overview of Resrouce
 
 #Home Directory
 #Work Directory
