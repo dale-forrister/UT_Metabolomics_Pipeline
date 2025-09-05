@@ -196,54 +196,380 @@ ln -sf /stor/scratch/Sedio/<yourusername>/home_extralocal_rstudio/ \
 ```
 That’s it — from now on, RStudio will keep writing to Scratch automatically.
 
-#### Shared Work and Scratch areas
-Shared Work and Scratch areas are available for each POD group under /stor/work/<GroupName> and /stor/scratch/<GroupName> (for example, /stor/work/Hofmann, /stor/scratch/Hofmann). These areas are accessible only by members of the named group. Users can find out which group or groups they belong to by typing the groups command on the command line.
+### Shared Storage on the Cluster
 
-These Work and Scratch areas are designed for storage of shared project artifacts, so they have no predefined structure (i.e. user directories are not automatically created). Group members may create any directory structure that is meaningful to the group's work.
+#### Work vs. Scratch
 
-Shared Work areas are backed up weekly. Scratch areas are not backed up. Both Work and Scratch areas may have quotas, depending on the POD (e.g. on the Rental or GSAF pod); such quotas are generally in the multi-terabyte range.
+Each research group has two shared storage spaces:
 
-Because it has a large quota and is regularly backed up and archived, your group's Work area is where large research artifacts that need to be preserved should be located.
+Work → /stor/work/Sedio/
 
-Scratch, on the other hand, can be used for artifacts that are transient or can easily be re-created (such as downloads from public databases).
+Backed up weekly and archived to tape roughly once per year.
+Best for important research data and results that must be preserved.
 
-See Manage storage areas by project activity for important guidelines for Work and Scratch area contents.
+#### Our group will maintain - UPLC-MS Files in Work as well as common software we all want to access. i.e. sirius, mzmine and dreaMS
 
-Weekly backups
-All Home and Work directories are backed up weekly to a separate backup storage server (spinning disk). Backups take place sometime between Friday and Monday mornings and are currently not incremental backups.
+Scratch → /stor/scratch/Sedio/
 
-Note that any directory in any file system tree named tmp, temp, or backups is not backed up. Directories with these names are intended for temporary files, especially large numbers of small temporary files. See "Cannot create tempfile" error and Avoid having too many small files.
+Also large quota.
 
-Periodic and long-term archiving
-Data on the backup server are periodically archived to TACC's Ranch tape archive roughly once a year. Current archives are as of:
+Not backed up — files can be deleted without notice.
 
-2025-01 (in progress)
-2024-01 (many but not all PODs)
-2022-01
-2020-07
-In addition, to avoid re-archiving the same directories multiple times, we maintain a "long term archives (LTA)" directory that contains data from projects that are no longer active. Such project data may have been transferred to a group's Scratch area to avoid consuming backup space, or may have been removed from POD storage entirely after archiving to avoid consuming storage server space.
+Best for temporary or reproducible data (e.g., downloads, intermediate results).
 
-Please Contact Us if you need something retrieved from tape archives.
+To check which groups you belong to:
+
+```bash
+groups
+```
+Both areas are shared by everyone in your group, and you can create whatever directory structure makes sense (user folders are not auto-created).
+
+Backups and Archiving
+
+Home and Work directories are backed up weekly (Friday–Monday).
+
+Scratch is never backed up.
+
+Directories named tmp, temp, or backups are excluded from backups.
+
+Backups are occasionally archived to TACC’s Ranch tape archive (roughly once a year).
+
+Old project data may be moved into “long term archives (LTA)” or off the cluster entirely to save space.
+
+If you need something from tape, you’ll need to contact system admins.
+
+### Moving Files Between Storage Areas
+
+Most users will need to shuffle data between Home, Work, and Scratch.
+
+#### Using mv (simple move)
+
+Quickly move files if staying within the same filesystem:
+
+```bash
+mv ~/myproject/data.csv /stor/work/Sedio/<My_Specific_User_Folder>/myproject/
+
+```
+
+Using rsync (safe copy)
+
+rsync is preferred when copying because it preserves file permissions and can resume if interrupted.
+
+Example:
+
+```bash
+rsync -avrP ~/myproject/ /stor/scratch/Sedio/<My_Specific_User_Folder>/myproject_test/
+```
+
+What the flags mean:
+
+-a → archive mode (preserves permissions, symlinks, timestamps, etc.)
+
+-v → verbose (shows what’s happening)
+
+-r → recursive (copies subdirectories)
+
+-P → progress + partial (shows progress and allows resume if interrupted)
+
+Copy example
+```bash
+rsync -avrP /stor/work/Sedio/<My_Specific_User_Folder>/project1/ /stor/scratch/Sedio/<My_Specific_User_Folder>/project1_copy/
+```
+
+This makes a full copy of project1 from Work into Scratch.
+
+### Moving Large Files To/From Box with rclone
+
+For very large transfers (e.g., raw data, big outputs), use rclone. This tool syncs files between the cluster and Box (or other cloud storage).
+
+##### 1. Set up rclone with Box
+
+Run:
+```bash
+rclone config
+```
+
+Follow prompts:
+
+Choose n for a new remote.
+
+Give it a name (e.g., box).
+
+Select Box from the provider list.
+
+Accept defaults unless you need advanced options.
+
+rclone will open a browser window for you to log into Box and grant access.
+
+Once complete, you’ll have a working Box remote (called box in this example).
+
+##### 2. Copy files to Box
+```bash  
+rclone copy /stor/work/MyGroup/project1 box:/project1
+```
+##### 3. Copy files from Box
+```bash
+rclone copy box:/project1 /stor/work/MyGroup/project1
+```
+#####  4. Sync (mirror) a directory
+
+To make Box and your Work folder match exactly:
+```bash
+rclone sync /stor/work/MyGroup/project1 box:/project
+```
+
+Warning: sync deletes files on the destination if they don’t exist on the source. Use with care!
+
+#### Automating Box Sync with Cron
+
+If you regularly move files between the cluster and Box, you can schedule it with a cron job (automated task runner on Linux).
+
+1. Open the crontab editor
+```bash
+crontab -e
+```
+3. Add a sync job
+
+For example, to sync your Work project to Box every night at 2 AM:
+```bash
+0 2 * * * rclone sync /stor/work/MyGroup/project1 box:/project1 >> ~/rclone_project1.log 2>&1
+```
+
+Explanation:
+0 2 * * * → runs at 02:00 every day.
+rclone sync ... → command to run.
+>> ~/rclone_project1.log 2>&1 → saves logs so you can check if it worked.
+
+3. Check your jobs
+```bash
+crontab -l
+```
+
+## 3. Notes on Important Group Foldres:
+### a. Software
+### b. Conda Envs
+
+### Using Conda:
+Conda Environments for the Lab
+What is Conda (and why we use it)
+
+Conda is a package and environment manager. It lets you:
+
+install software (R/Python + libraries, CLI tools) without admin rights,
+
+keep multiple, isolated environments (different versions for different projects),
+
+make work reproducible by saving and restoring environment definitions.
+
+We strongly recommend using mamba (a drop-in faster Conda replacement) for speed. You can still activate environments with conda activate … even if you install them with mamba.
+
+Lab Policy: Per-User vs Shared Environments
+Per-User (in Home)
+
+Each user can create their own environments in Home for personal work.
+
+Pros: freedom to experiment.
+
+Cons: can eat Home quota if you’re not careful.
+
+Shared (group-maintained)
+
+The lab maintains read-only, group environments for critical pipelines under:
+
+/stor/work/sedio/conda_envs
 
 
+Pros: identical, reproducible setups for everyone; large space; backed up.
+
+Cons: only lab maintainers update these (by design).
+
+Plan: You can have your personal envs in Home, but when running specific, standardized parts of the pipeline, activate the shared env.
+
+One-Time Setup (so shared envs show up automatically)
+
+Add the shared env directory to your Conda search path and put Conda’s package cache in Scratch (saves Home quota):
+
+# Make sure conda is initialized for your shell
+conda init bash  # or zsh, etc. Then re-open your shell.
+
+# Tell conda where to look for environments (adds shared path)
+conda config --add envs_dirs /stor/work/sedio/conda_envs
+
+# (Recommended) Put package caches in Scratch, not Home
+conda config --add pkgs_dirs /stor/scratch/sedio/conda_pkgs
+
+# (Optional) Prefer conda-forge channel and strict priority for reproducibility
+conda config --add channels conda-forge
+conda config --set channel_priority strict
 
 
-#Work Folder Structure:
-conda_envs -
-software - 
+After this, conda env list will include the shared envs, and you’ll be able to do conda activate <name> if names are unique.
+
+Using the Shared Environments
+Activate
+
+You can activate by path (always works):
+
+conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
 
 
-#Using Conda -
-  #how to install to home directory
+If you added /stor/work/sedio/conda_envs to envs_dirs, you can also:
 
-#Setting up Alius to Shared Conda Environments
+conda activate <ENV_NAME>
+
+Deactivate
+conda deactivate
+
+Don’t modify shared envs
+
+Shared envs are read-only for stability. If you need something added:
+
+Ask a maintainer to update the env (see “Maintaining Shared Envs” below), or
+
+Clone it to your Home and modify locally:
+
+conda create -p ~/conda-envs/myproj --clone /stor/work/sedio/conda_envs/<ENV_NAME>
+conda activate ~/conda-envs/myproj
+mamba install <extra-packages>
+
+Creating Your Own Environment (in Home)
+# Faster installs with mamba
+mamba create -p ~/conda-envs/myproj python=3.11
+conda activate ~/conda-envs/myproj
+
+# Install packages
+mamba install numpy pandas jupyterlab
+
+# Save a portable spec for reproducibility (best for Conda)
+conda env export --no-builds > ~/myproj_env.yml
+
+# Re-create later (anywhere)
+mamba env create -p ~/conda-envs/myproj_recreated -f ~/myproj_env.yml
+
+
+Tip: use -p <path> instead of -n <name> so you control where the env lives and avoid Home clutter. Keep the pkgs cache in Scratch via pkgs_dirs (above) to save Home quota.
+
+Maintaining Shared Environments (for lab maintainers)
+
+Source of truth: an environment.yml (version-controlled in the lab repo).
+Deployment path: /stor/work/sedio/conda_envs/<ENV_NAME>
+
+Create or Update a Shared Env
+# Build into the shared path from the YAML
+mamba env create -p /stor/work/sedio/conda_envs/<ENV_NAME> -f environment.yml
+# (or update an existing one)
+mamba env update  -p /stor/work/sedio/conda_envs/<ENV_NAME> -f environment.yml
+
+Freeze the Environment
+
+For exact reproducibility over time:
+
+# Export with pinned versions but without build strings (portable)
+conda env export --no-builds -p /stor/work/sedio/conda_envs/<ENV_NAME> > environment.lock.yml
+
+
+Commit environment.yml and environment.lock.yml to the lab repo with a changelog.
+
+Set Permissions (group-read, maintainer-write)
+# Set group ownership once (adjust group name)
+chgrp -R sedio /stor/work/sedio/conda_envs
+
+# Everyone in the group can read/execute, only maintainers can write
+chmod -R g+rx,o-rwx /stor/work/sedio/conda_envs
+# For the specific env when deploying:
+chmod -R g+rx /stor/work/sedio/conda_envs/<ENV_NAME>
+
+
+Policy: Users do not install/upgrade packages in shared envs. Changes go through a maintainer PR against environment.yml.
+
+CUDA/ROCm & Platform Notes (quick realities)
+
+GPU stacks (PyTorch, JAX, TensorFlow) are hardware-specific. Always match the CUDA/ROCm build to the pod’s drivers.
+
+If we publish a shared GPU env (<ENV_NAME>-gpu), use that exact env for GPU work instead of mixing and matching.
+
+If something fails to import, check python -c "import torch; print(torch.__version__)" and compare to the env’s README.
+
+Common Commands Cheat-Sheet
+# List environments (includes shared if envs_dirs is set)
+conda env list
+
+# Activate an env by path (always works)
+conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
+
+# Create a personal env in Home
+mamba create -p ~/conda-envs/analysis python=3.11 r-base=4.3
+
+# Install packages
+mamba install -p ~/conda-envs/analysis numpy scipy scikit-learn
+
+# Export (portable)
+conda env export --no-builds -p ~/conda-envs/analysis > ~/analysis_env.yml
+
+# Recreate from YAML
+mamba env create -p ~/conda-envs/analysis2 -f ~/analysis_env.yml
+
+Space & Quotas: Keep Home Light
+
+Envs in Home count against your Home quota.
+
+Reduce Home usage by setting the package cache to Scratch:
+
+conda config --add pkgs_dirs /stor/scratch/sedio/conda_pkgs
+
+
+If an env gets huge, consider moving it to Work (for group use) or cloning into Scratch if it’s temporary.
+
+Troubleshooting
+
+CommandNotFoundError: conda
+Run conda init bash (or your shell), then open a new terminal.
+
+Environment not found when using name
+Use the path: conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
+or add envs_dirs (see “One-Time Setup”).
+
+Permission denied when installing in shared env
+That’s by design. Clone it to Home or submit a change request to maintainers.
+
+Solver is slow
+Use mamba (mamba install …) instead of conda install ….
+
+Example: End-to-End Workflow
+
+Add shared envs and caches:
+
+conda init bash
+conda config --add envs_dirs /stor/work/sedio/conda_envs
+conda config --add pkgs_dirs /stor/scratch/sedio/conda_pkgs
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+
+
+Use a shared pipeline env:
+
+conda activate /stor/work/sedio/conda_envs/metabolomics-pipeline
+python run_pipeline.py --config configs/run1.yaml
+
+
+Customize for a side project (in Home):
+
+conda create -p ~/conda-envs/met-pipe-dev --clone /stor/work/sedio/conda_envs/metabolomics-pipeline
+conda activate ~/conda-envs/met-pipe-dev
+mamba install seaborn==0.13.2
+
 
   
+## 4. Instructions to specifc parts of the metabolomics pipeline
 
+### Part 1: Sample Metadata and Setting up a UPLC Run:
+
+### Part 2: Moving Raw data files from the Metabolomics Core and Converting with MSConvert
 #Converting raw files
-#processing with Mzmine
-#Sirius
-#dreams
 
-etc etc
+### Part 3: Processing Raw data with MZmine
+
+### Part 4: Post Processing W/ Sirius and Dreams:
+#### 4.a Sirius
+#### 4.b dreaMS 
 
