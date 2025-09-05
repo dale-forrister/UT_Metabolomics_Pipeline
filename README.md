@@ -119,9 +119,10 @@ Follow this link depending on which compute node you are are targeting.
 ### Overview of POD Diskspace and storage
 
 We each are given access to three directories:
- Home Directory - small storage - 100 GB, frequently backed up and only availble to the user.
- Work Directory - large storage - 16 TB of data that is shared by all users in our group
- scratch - this is a temporary directory but is a #FAST disk so if you are reading and writing lots of files in your workflow it's useful to first copy your data to scratch and process from there
+
+ - Home Directory - small storage - 100 GB, frequently backed up and only availble to the user.
+ - Work Directory - large storage - 16 TB of data that is shared by all users in our group
+ - scratch - this is a temporary directory but is a #FAST disk so if you are reading and writing lots of files in your workflow it's useful to first copy your data to scratch and process from there
 
 #### Home directory
 Your Home directory on a POD is located under /stor/home. Home directories are meant for storing small files. All home directories have a 100 GB quota.
