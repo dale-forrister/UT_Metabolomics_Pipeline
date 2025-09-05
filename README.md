@@ -155,9 +155,12 @@ These folders often contain cached sessions, logs, or temporary files that can b
 
 Run this command to see the size of the usual suspects:
 
+```bash
 du -sh ~/.local/share/rstudio ~/.local/share/jupyter ~/.cache ~/.conda 2>/dev/null
+```
 
 Example output:
+
 2.5G    /home/username/.local/share/rstudio
 500M    /home/username/.local/share/jupyter
 1.2G    /home/username/.cache
