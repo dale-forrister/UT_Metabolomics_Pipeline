@@ -95,13 +95,17 @@ The folder's contents will appear in the VS Code Explorer. You can now create, e
 
 Congratulations! You have successfully connected to a remote server with VS Code. You can now enjoy a seamless remote development experience with the full power of your favorite editor.
 
-#How to connect
-  SSH
-  VScode
+## 2. Connecting to a Remote Server through the browser using ondemand
 
-Connecting to on demand interactive sessions:
-paste this in browser
-  [https://rentcomp3.ccbb.utexas.edu/](https://rentcomp03.ccbb.utexas.edu/)
+This is by far the easiest way to connect. It is also the best way to run R on the server. I generally prefer vscode for python rather than Jupyterhub but you can explore both options.
+
+Follow this link depending on which compute node you are are targeting.
+
+ [https://rentcomp1.ccbb.utexas.edu/](https://rentcomp01.ccbb.utexas.edu/)
+ 
+ [https://rentcomp2.ccbb.utexas.edu/](https://rentcomp02.ccbb.utexas.edu/)
+
+ [https://rentcomp3.ccbb.utexas.edu/](https://rentcomp03.ccbb.utexas.edu/)
 
   You can choose between:
   RStudio
@@ -109,10 +113,8 @@ paste this in browser
 
   When you are coding here you will be running on the cluster through web browser
 
-https://lambcomp02.ccbb.utexas.edu/
-  
 
-##Overview of Resrouce
+##3.Overview of Resrouce
 
 #Home Directory
 #Work Directory
