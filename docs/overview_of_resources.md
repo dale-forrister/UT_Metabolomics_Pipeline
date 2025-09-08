@@ -10,7 +10,7 @@
   - [Moving Files Between Storage Spaces and On and Off Custer](#moving-files)  
   - [Read Only Metabolomics Pipeline Folders](#read-only-metabolomics-pipeline-folders)
     - [Using Conda](#using-conda)
-    - [software](#software]
+    - [software](#software)
     - [github_repos](#github-repos)  
 
 ## Overview of POD Diskspace and storage
@@ -421,7 +421,7 @@ mamba env create -p ~/conda-envs/analysis2 -f ~/analysis_env.yml
 
 If you would like to add a piece of software let us know
 
-## github_repos
+## github repos
 
 It is often useful to down specific github repos and use them like you would a package. We will store shared ones here! If it's not going to be maintained for the group please put it in your home directory or  /stor/work/Sedio/user_directories/
 
