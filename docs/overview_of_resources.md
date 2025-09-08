@@ -273,7 +273,11 @@ Read and Write by all users:
 ## Using Conda:
 Conda Environments for the Lab
 
+
+
 #### What is Conda (and why we use it)
+
+Here is a video overview of what conda is... [https://youtu.be/sDCtY9Z1bqE?si=pgRFDddbxCM26KxW](url)
 
 Conda is a package and environment manager. It lets you:
 
