@@ -11,11 +11,10 @@
   - Overview of POD Diskspace and Storage
   - Notes on Important Group Folders
 - Instructions for specifc parts of the metabolomics pipeline
-  - [Part 1: Sample Metadata and Setting up a UPLC Run](metabolomics_pipeline_part_1.md)
-  - [Part 2: Moving Raw data files from the Metabolomics Core and Converting with MSConvert](#part-2-moving-raw-data-files-from-the-metabolomics-core-and-converting-with-msconvert)
-  - [Part 3: Processing Raw data with MZmine](#part-3-processing-raw-data-with-mzmine)
-  - [Part 4: Post Processing W/ Sirius and Dreams](#part-4-post-processing-w-sirius-and-dreams)
-
+  - [Part 1: Sample Metadata and Setting up a UPLC Run](docs/metabolomics_pipeline_part_1.md)
+  - [Part 2: Moving Raw data files from the Metabolomics Core and Converting with MSConvert](docs/metabolomics_pipeline_part_2.md)
+  - [Part 3: Processing Raw data with MZmine](docs/metabolomics_pipeline_part_3.md)
+  - [Part 4: Post Processing W/ Sirius and Dreams](docs/metabolomics_pipeline_part_4.md)
 ### Create Your POD Account
 
 1.  Request a POD account [here](https://rctf-account-request.icmb.utexas.edu/). You can also learn more about POD resources [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976153/POD+Accounts).
