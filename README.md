@@ -1,4 +1,5 @@
-#### <center> Sedio Lab Group Metabolomics Pipeline Using the UT Austin Biomedical Research Computing Facility (BRCF) - aka Pods <center>
+# <div align="center"> Sedio Lab Group Metabolomics Pipeline </div>
+## <div align="center"> Using the UT Austin Biomedical Research Computing Facility (BRCF) - aka Pods </div>
 
 
 ## Table of Contents
@@ -6,7 +7,14 @@
 - [Connecting to Pods](#connecting-to-cpu-rental-pods)
   - [Connecting to a Remote Server with Ondemand](#1-connecting-to-a-remote-server-through-the-browser-using-ondemand)
   - [Connecting to a Remote Server with VS Code](#2-connecting-to-a-remote-server-with-vs-code)
-
+- [Overview of Resources](#overview-of-resources)
+  - [Overview of POD Diskspace and Storage](#overview-of-pod-diskspace-and-storage)
+  - [Notes on Important Group Folders](notes-on-important-group-folders)
+- [Instructions for specifc parts of the metabolomics pipeline](#instructions-for-specifc-parts-of-the-metabolomics-pipeline)
+  - [Part 1: Sample Metadata and Setting up a UPLC Run](#part-1-sample-metadata-and-setting-up-a-uplc-run)
+  - [Part 2: Moving Raw data files from the Metabolomics Core and Converting with MSConvert](#part-2-moving-raw-data-files-from-the-metabolomics-core-and-converting-with-msconvert)
+  - [Part 3: Processing Raw data with MZmine](#part-3-processing-raw-data-with-mzmine)
+  - [Part 4: Post Processing W/ Sirius and Dreams](#part-4-post-processing-w-sirius-and-dreams)
 
 ### Create Your POD Account
 
@@ -129,7 +137,7 @@ The folder's contents will appear in the VS Code Explorer. You can now create, e
 Congratulations! You have successfully connected to a remote server with VS Code. You can now enjoy a seamless remote development experience with the full power of your favorite editor.
 
 
-### Overview of Resrouce
+### Overview of Resources
 
 #### Overview of POD Diskspace and storage
 
@@ -360,7 +368,7 @@ rclone sync ... → command to run.
 crontab -l
 ```
 
-### 3. Notes on Important Group Foldres:
+### Notes on Important Group Foldres:
 #### a. Conda Envs
 #### b. Software
 
@@ -549,7 +557,7 @@ conda create -p ~/conda-envs/met-pipe-dev --clone /stor/work/sedio/conda_envs/me
 conda activate ~/conda-envs/met-pipe-dev
 mamba install seaborn==0.13.2
 
-## 4. Instructions to specifc parts of the metabolomics pipeline
+## Instructions for specifc parts of the metabolomics pipeline
 
 ### Part 1: Sample Metadata and Setting up a UPLC Run:
 
