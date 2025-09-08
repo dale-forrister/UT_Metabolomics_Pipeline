@@ -7,7 +7,7 @@
 - [Connecting to Pods](#connecting-to-cpu-rental-pods)
   - [Connecting to a Remote Server with Ondemand](#1-connecting-to-a-remote-server-through-the-browser-using-ondemand)
   - [Connecting to a Remote Server with VS Code](#2-connecting-to-a-remote-server-with-vs-code)
-- [Overview of Resources](overview_of_resources.md)
+- [Overview of Resources](docs/overview_of_resources.md)
   - Overview of POD Diskspace and Storage
   - Notes on Important Group Folders
 - Instructions for specifc parts of the metabolomics pipeline
