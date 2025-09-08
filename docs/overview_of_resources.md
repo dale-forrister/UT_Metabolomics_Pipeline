@@ -347,15 +347,9 @@ Make sure Conda is initialized for your shell (see above).
 
 Add the shared env directory to your Conda search path:
 
+```{bash}
 conda config --add envs_dirs /stor/work/sedio/conda_envs
-
-
-(Optional) Move Conda’s package cache out of your small HOME quota:
-
-conda config --add pkgs_dirs /stor/scratch/$USER/conda_pkgs
-
-
-After this, conda env list will include both your personal and shared environments.
+```
 
 After this, conda env list will include the shared envs, and you’ll be able to do conda activate <name> if names are unique.
 
