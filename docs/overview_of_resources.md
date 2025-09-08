@@ -274,7 +274,6 @@ Read and Write by all users:
 Conda Environments for the Lab
 
 
-
 #### What is Conda (and why we use it)
 
 Here is a video overview of what conda is... [https://youtu.be/sDCtY9Z1bqE?si=pgRFDddbxCM26KxW](url)
@@ -314,20 +313,49 @@ One-Time Setup (so shared envs show up automatically)
 
 Add the shared env directory to your Conda search path and put Conda’s package cache in Scratch (saves Home quota):
 
-##### Make sure conda is initialized for your shell
-```bash
-conda init bash  # or zsh, etc. Then re-open your shell.
-```
-##### Tell conda where to look for environments (adds shared path)
-```bash
-conda config --add envs_dirs /stor/work/sedio/conda_envs
+### One Time Installing Conda:
+
+Installing Conda + Mamba (per user, in Home)
+
+Download and install Miniforge (recommended community build of Conda):
+
+```{bash}
+curl -L https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -o ~/miniforge.sh
+bash ~/miniforge.sh -b -p ~/miniforge3
 ```
 
-##### (Optional) Prefer conda-forge channel and strict priority for reproducibility
-```bash
+Initialize Conda for your shell:
+```{bash}
+source ~/miniforge3/etc/profile.d/conda.sh
+conda init bash   # or zsh
+exec $SHELL       # reload your shell
+```
+
+Install Mamba into base:
+```{bash}
+conda install -n base -c conda-forge mamba
+```
+
+(Optional) Configure defaults for reproducibility:
+```{bash}
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
+#### One-Time Setup (to see shared envs automatically)
+
+Make sure Conda is initialized for your shell (see above).
+
+Add the shared env directory to your Conda search path:
+
+conda config --add envs_dirs /stor/work/sedio/conda_envs
+
+
+(Optional) Move Conda’s package cache out of your small HOME quota:
+
+conda config --add pkgs_dirs /stor/scratch/$USER/conda_pkgs
+
+
+After this, conda env list will include both your personal and shared environments.
 
 After this, conda env list will include the shared envs, and you’ll be able to do conda activate <name> if names are unique.
 
