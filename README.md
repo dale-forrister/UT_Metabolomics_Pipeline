@@ -2,16 +2,52 @@
 
 
 ## Table of Contents
+- [Creating an Account](#create-your-pod-account)
 - [Connecting to Pods](#connecting-to-cpu-rental-pods)
-  - [Connecting to a Remote Server with VS Code](#1-connecting-to-a-remote-server-with-vs-code)
-  - [Connecting to a Remote Server with Ondemand](#2-connecting-to-a-remote-server-through-the-browser-using-ondemand)
+  - [Connecting to a Remote Server with Ondemand](#1-connecting-to-a-remote-server-through-the-browser-using-ondemand)
+  - [Connecting to a Remote Server with VS Code](#2-connecting-to-a-remote-server-with-vs-code)
 
-# Connecting to CPU Rental Pods:
-## 1. Connecting to a Remote Server with VS Code
+
+### Create Your POD Account
+
+1.  Request a POD account [here](https://rctf-account-request.icmb.utexas.edu/). You can also learn more about POD resources [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976153/POD+Accounts).
+
+2.  In the "Affiliation" field, select "Sedio_Brian". Please note that it may take 1-2 days for your account to be activated for SSH access to the computing clusters.
+
+This will get you access to the rental pods which have large CPU's, storage and memory. It is also where we have preinstall key softwore for the metabolomics pipeline.
+
+    1.  `rentcomp01.ccbb.utexas.edu` (CPU: 72 threads, Memory: 754G)
+    2.  `rentcomp02.ccbb.utexas.edu` (CPU: 72 threads, Memory: 251G)
+    3.  `rentcomp03.ccbb.utexas.edu` (CPU: 112 threads, Memory: 754G)
+
+If you need access to GPUs for machine learning pipelines please reach out to Dale Forrister, we have limited access to this but only for tasks that actually benefit from GPUs.
+
+### Connecting to CPU Rental Pods:
+
+## 1. Connecting to a Remote Server through the browser using ondemand
+
+This is by far the easiest way to connect. It is also the best way to run R on the server. I generally prefer vscode for python rather than Jupyterhub but you can explore both options.
+
+Follow this link depending on which compute node you are are targeting.
+
+ [https://rentcomp1.ccbb.utexas.edu/](https://rentcomp01.ccbb.utexas.edu/)
+ 
+ [https://rentcomp2.ccbb.utexas.edu/](https://rentcomp02.ccbb.utexas.edu/)
+
+ [https://rentcomp3.ccbb.utexas.edu/](https://rentcomp03.ccbb.utexas.edu/)
+
+  You can choose between:
+  RStudio
+  Jupyterhub
+
+  When you are coding here you will be running on the cluster through web browser
+
+
+#### 2. Connecting to a Remote Server with VS Code
 
 Visual Studio Code, a powerful and versatile code editor, can be transformed into a robust remote development environment. By connecting to a remote server, you can edit files and run commands as if you were working directly on that machine. This tutorial will guide you through connecting to a server using the popular "Remote - SSH" extension.
 
-### Prerequisites
+#### Prerequisites
 
 Before you begin, make sure you have installed Visual Studio Code (VS Code). You can find installation tutorials here:
 
@@ -20,17 +56,8 @@ Before you begin, make sure you have installed Visual Studio Code (VS Code). You
 
 It is also recommended that you read the first two parts of ["Practical Computing for Biologists" by Haddock and Dunn](<Practical Computing for Biologists.pdf>) to learn the basics of Linux and the Shell.
 
-### Step 0: Create Your POD Account
-
-1.  Request a POD account [here](https://rctf-account-request.icmb.utexas.edu/). You can also learn more about POD resources [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976153/POD+Accounts).
-
-2.  In the "Affiliation" field, select "Sedio_Brian". Please note that it may take 1-2 days for your account to be activated for SSH access to the computing clusters.
 
 3.  We currently have three nodes available on POD (server addresses listed below):
-
-    1.  `rentcomp01.ccbb.utexas.edu` (CPU: 72 threads, Memory: 754G)
-    2.  `rentcomp02.ccbb.utexas.edu` (CPU: 72 threads, Memory: 251G)
-    3.  `rentcomp03.ccbb.utexas.edu` (CPU: 112 threads, Memory: 754G)
 
 4.  These nodes are shared with other labs, so please be mindful of your resource usage to avoid overloading the system. The POD manager will restrict processes that use excessive resources. You may receive an email notification like this:
 
@@ -43,14 +70,14 @@ It is also recommended that you read the first two parts of ["Practical Computin
     This process has consumed 204 minutes of CPU time.
     ```
 
-### Step 1: Install the "Remote - SSH" Extension
+#### Step 1: Install the "Remote - SSH" Extension
 
 1.  Open **VS Code**.
 2.  Navigate to the **Extensions** view by clicking the square icon in the sidebar on the left, or by pressing `Ctrl+Shift+X` (Windows) or `Cmd+Shift+X` (macOS).
 3.  In the search bar, type `Remote - SSH`.
 4.  Locate the extension provided by **Microsoft** and click the **Install** button.
 
-### Step 2: Connect to the Remote Server
+#### Step 2: Connect to the Remote Server
 
 Once the extension is installed, a new "Remote Explorer" icon will appear in the activity bar.
 
@@ -75,7 +102,7 @@ Once the extension is installed, a new "Remote Explorer" icon will appear in the
 
 5.  You will be prompted to select an SSH configuration file. Choose the default location offered, which is typically in the `.ssh` folder within your user's home directory.
 
-### Step 3: Authenticate and Connect
+#### Step 3: Authenticate and Connect
 
 1.  After adding the host, it will appear in your list of SSH Targets in the Remote Explorer.
 
@@ -89,7 +116,7 @@ Once the extension is installed, a new "Remote Explorer" icon will appear in the
 
 5.  Once the connection is successful, you will see your server's address in the green status bar at the bottom-left corner of the VS Code window. This indicates that you are now working on the remote server.
 
-### Step 4: Open a Folder on the Remote Server
+#### Step 4: Open a Folder on the Remote Server
 
 Now that you are connected, you can open a project folder from the remote server.
 
@@ -101,28 +128,10 @@ The folder's contents will appear in the VS Code Explorer. You can now create, e
 
 Congratulations! You have successfully connected to a remote server with VS Code. You can now enjoy a seamless remote development experience with the full power of your favorite editor.
 
-## 2. Connecting to a Remote Server through the browser using ondemand
 
-This is by far the easiest way to connect. It is also the best way to run R on the server. I generally prefer vscode for python rather than Jupyterhub but you can explore both options.
+### Overview of Resrouce
 
-Follow this link depending on which compute node you are are targeting.
-
- [https://rentcomp1.ccbb.utexas.edu/](https://rentcomp01.ccbb.utexas.edu/)
- 
- [https://rentcomp2.ccbb.utexas.edu/](https://rentcomp02.ccbb.utexas.edu/)
-
- [https://rentcomp3.ccbb.utexas.edu/](https://rentcomp03.ccbb.utexas.edu/)
-
-  You can choose between:
-  RStudio
-  Jupyterhub
-
-  When you are coding here you will be running on the cluster through web browser
-
-
-## 2. Overview of Resrouce
-
-### Overview of POD Diskspace and storage
+#### Overview of POD Diskspace and storage
 
 We each are given access to three directories:
 
@@ -130,7 +139,7 @@ We each are given access to three directories:
  - Work Directory - large storage - 16 TB of data that is shared by all users in our group
  - scratch - this is a temporary directory but is a #FAST disk so if you are reading and writing lots of files in your workflow it's useful to first copy your data to scratch and process from there
 
-#### Home directory
+##### Home directory
 Your Home directory on a POD is located under /stor/home. Home directories are meant for storing small files. All home directories have a 100 GB quota.
 Home directory snapshots
 Read-only snapshots are periodically taken of your home directory contents. Like Windows backups or Macintosh Time Machine, these backups only consume disk space for files that change (are updated or deleted), in which case the previous file state is "saved" in a snapshot.
@@ -146,7 +155,7 @@ Your 100 GB Home directory includes snapshot data. These snapshot backups only c
 The main consequence of this snapshot behavior is that they can cause your 100 GB Home directory quota to be exceeded, even after non-snapshot files have been removed.
 
 While you can view and copy files in your ~/.zfs/snapshot snapshot directories, you cannot write to them or delete them. Please contact us at rctf-support@utexas.edu to remove your snapshots if you exceed your Home directory quota.
-##### Warning: Watch Your Home Directory Size
+###### Warning: Watch Your Home Directory Size
 
 Your Home directory has a strict quota (a size limit). If you exceed it, programs may crash or refuse to start (e.g. RStudio won’t launch).
 
@@ -171,7 +180,7 @@ Example output:
 500M    /home/username/.local/share/jupyter
 1.2G    /home/username/.cache
 
-##### Solution: Move Big Folders to Scratch
+###### Solution: Move Big Folders to Scratch
 
 If one of these folders is too big, you can move it to your Scratch area (which has much more space) and replace it with a symbolic link. This makes the program think it’s still writing to Home, but the data actually lives in Scratch.
 
@@ -202,9 +211,9 @@ ln -sf /stor/scratch/Sedio/<yourusername>/home_extralocal_rstudio/ \
 ```
 That’s it — from now on, RStudio will keep writing to Scratch automatically.
 
-### Shared Storage on the Cluster
+#### Shared Storage on the Cluster
 
-#### Work vs. Scratch
+##### Work vs. Scratch
 
 Each research group has two shared storage spaces:
 
@@ -213,7 +222,7 @@ Work → /stor/work/Sedio/
 Backed up weekly and archived to tape roughly once per year.
 Best for important research data and results that must be preserved.
 
-#### Our group will maintain - UPLC-MS Files in Work as well as common software we all want to access. i.e. sirius, mzmine and dreaMS
+##### Our group will maintain - UPLC-MS Files in Work as well as common software we all want to access. i.e. sirius, mzmine and dreaMS
 
 Scratch → /stor/scratch/Sedio/
 
@@ -244,11 +253,11 @@ Old project data may be moved into “long term archives (LTA)” or off the clu
 
 If you need something from tape, you’ll need to contact system admins.
 
-### Moving Files Between Storage Areas
+#### Moving Files Between Storage Areas
 
 Most users will need to shuffle data between Home, Work, and Scratch.
 
-#### Using mv (simple move)
+##### Using mv (simple move)
 
 Quickly move files if staying within the same filesystem:
 
@@ -284,11 +293,11 @@ rsync -avrP /stor/work/Sedio/<My_Specific_User_Folder>/project1/ /stor/scratch/S
 
 This makes a full copy of project1 from Work into Scratch.
 
-### Moving Large Files To/From Box with rclone
+#### Moving Large Files To/From Box with rclone
 
 For very large transfers (e.g., raw data, big outputs), use rclone. This tool syncs files between the cluster and Box (or other cloud storage).
 
-##### 1. Set up rclone with Box
+###### 1. Set up rclone with Box
 
 Run:
 ```bash
@@ -309,15 +318,15 @@ rclone will open a browser window for you to log into Box and grant access.
 
 Once complete, you’ll have a working Box remote (called box in this example).
 
-##### 2. Copy files to Box
+###### 2. Copy files to Box
 ```bash  
 rclone copy /stor/work/MyGroup/project1 box:/project1
 ```
-##### 3. Copy files from Box
+###### 3. Copy files from Box
 ```bash
 rclone copy box:/project1 /stor/work/MyGroup/project1
 ```
-#####  4. Sync (mirror) a directory
+######  4. Sync (mirror) a directory
 
 To make Box and your Work folder match exactly:
 ```bash
@@ -326,7 +335,7 @@ rclone sync /stor/work/MyGroup/project1 box:/project
 
 Warning: sync deletes files on the destination if they don’t exist on the source. Use with care!
 
-#### Automating Box Sync with Cron
+##### Automating Box Sync with Cron
 
 If you regularly move files between the cluster and Box, you can schedule it with a cron job (automated task runner on Linux).
 
@@ -351,11 +360,11 @@ rclone sync ... → command to run.
 crontab -l
 ```
 
-## 3. Notes on Important Group Foldres:
-### a. Software
-### b. Conda Envs
+### 3. Notes on Important Group Foldres:
+#### a. Conda Envs
+#### b. Software
 
-### Using Conda:
+#### Using Conda:
 Conda Environments for the Lab
 What is Conda (and why we use it)
 
@@ -382,8 +391,9 @@ Shared (group-maintained)
 
 The lab maintains read-only, group environments for critical pipelines under:
 
+```{bash}
 /stor/work/sedio/conda_envs
-
+```
 
 Pros: identical, reproducible setups for everyone; large space; backed up.
 
@@ -395,16 +405,16 @@ One-Time Setup (so shared envs show up automatically)
 
 Add the shared env directory to your Conda search path and put Conda’s package cache in Scratch (saves Home quota):
 
-# Make sure conda is initialized for your shell
+##### Make sure conda is initialized for your shell
 conda init bash  # or zsh, etc. Then re-open your shell.
 
-# Tell conda where to look for environments (adds shared path)
+##### Tell conda where to look for environments (adds shared path)
 conda config --add envs_dirs /stor/work/sedio/conda_envs
 
-# (Recommended) Put package caches in Scratch, not Home
+##### (Recommended) Put package caches in Scratch, not Home
 conda config --add pkgs_dirs /stor/scratch/sedio/conda_pkgs
 
-# (Optional) Prefer conda-forge channel and strict priority for reproducibility
+##### (Optional) Prefer conda-forge channel and strict priority for reproducibility
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 
@@ -420,38 +430,46 @@ conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
 
 
 If you added /stor/work/sedio/conda_envs to envs_dirs, you can also:
-
+```{bash}
 conda activate <ENV_NAME>
-
+```
 Deactivate
+```{bash}
 conda deactivate
-
+```
 Don’t modify shared envs
 
 Shared envs are read-only for stability. If you need something added:
 
 Ask a maintainer to update the env (see “Maintaining Shared Envs” below), or
 
-Clone it to your Home and modify locally:
+Clone it to your Home and modify locally. Note you do not have to clone in order to run common tasks but if you'd like to make changes to the pipeline you can clone it to test out those changes.
 
+```{bash}
 conda create -p ~/conda-envs/myproj --clone /stor/work/sedio/conda_envs/<ENV_NAME>
 conda activate ~/conda-envs/myproj
 mamba install <extra-packages>
+```
 
 Creating Your Own Environment (in Home)
-# Faster installs with mamba
+##### Faster installs with mamba
+```{bash}
 mamba create -p ~/conda-envs/myproj python=3.11
 conda activate ~/conda-envs/myproj
+```
 
-# Install packages
+##### Install packages
+```{bash}
 mamba install numpy pandas jupyterlab
-
-# Save a portable spec for reproducibility (best for Conda)
+```
+##### Save a portable spec for reproducibility (best for Conda)
+```{bash}
 conda env export --no-builds > ~/myproj_env.yml
-
-# Re-create later (anywhere)
+```
+##### Re-create later (anywhere)
+```{bash}
 mamba env create -p ~/conda-envs/myproj_recreated -f ~/myproj_env.yml
-
+```
 
 Tip: use -p <path> instead of -n <name> so you control where the env lives and avoid Home clutter. Keep the pkgs cache in Scratch via pkgs_dirs (above) to save Home quota.
 
@@ -461,85 +479,53 @@ Source of truth: an environment.yml (version-controlled in the lab repo).
 Deployment path: /stor/work/sedio/conda_envs/<ENV_NAME>
 
 Create or Update a Shared Env
-# Build into the shared path from the YAML
+##### Build into the shared path from the YAML
 mamba env create -p /stor/work/sedio/conda_envs/<ENV_NAME> -f environment.yml
-# (or update an existing one)
+##### (or update an existing one)
 mamba env update  -p /stor/work/sedio/conda_envs/<ENV_NAME> -f environment.yml
 
 Freeze the Environment
 
 For exact reproducibility over time:
 
-# Export with pinned versions but without build strings (portable)
+##### Export with pinned versions but without build strings (portable)
 conda env export --no-builds -p /stor/work/sedio/conda_envs/<ENV_NAME> > environment.lock.yml
 
 
 Commit environment.yml and environment.lock.yml to the lab repo with a changelog.
 
 Set Permissions (group-read, maintainer-write)
-# Set group ownership once (adjust group name)
+##### Set group ownership once (adjust group name)
 chgrp -R sedio /stor/work/sedio/conda_envs
 
-# Everyone in the group can read/execute, only maintainers can write
+##### Everyone in the group can read/execute, only maintainers can write
 chmod -R g+rx,o-rwx /stor/work/sedio/conda_envs
-# For the specific env when deploying:
+##### For the specific env when deploying:
 chmod -R g+rx /stor/work/sedio/conda_envs/<ENV_NAME>
 
 
 Policy: Users do not install/upgrade packages in shared envs. Changes go through a maintainer PR against environment.yml.
 
-CUDA/ROCm & Platform Notes (quick realities)
-
-GPU stacks (PyTorch, JAX, TensorFlow) are hardware-specific. Always match the CUDA/ROCm build to the pod’s drivers.
-
-If we publish a shared GPU env (<ENV_NAME>-gpu), use that exact env for GPU work instead of mixing and matching.
-
-If something fails to import, check python -c "import torch; print(torch.__version__)" and compare to the env’s README.
-
 Common Commands Cheat-Sheet
-# List environments (includes shared if envs_dirs is set)
+##### List environments (includes shared if envs_dirs is set)
 conda env list
 
-# Activate an env by path (always works)
+##### Activate an env by path (always works)
 conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
 
-# Create a personal env in Home
+##### Create a personal env in Home
 mamba create -p ~/conda-envs/analysis python=3.11 r-base=4.3
 
-# Install packages
+##### Install packages
 mamba install -p ~/conda-envs/analysis numpy scipy scikit-learn
 
-# Export (portable)
+##### Export (portable)
 conda env export --no-builds -p ~/conda-envs/analysis > ~/analysis_env.yml
 
-# Recreate from YAML
+##### Recreate from YAML
 mamba env create -p ~/conda-envs/analysis2 -f ~/analysis_env.yml
 
-Space & Quotas: Keep Home Light
-
-Envs in Home count against your Home quota.
-
-Reduce Home usage by setting the package cache to Scratch:
-
-conda config --add pkgs_dirs /stor/scratch/sedio/conda_pkgs
-
-
-If an env gets huge, consider moving it to Work (for group use) or cloning into Scratch if it’s temporary.
-
 Troubleshooting
-
-CommandNotFoundError: conda
-Run conda init bash (or your shell), then open a new terminal.
-
-Environment not found when using name
-Use the path: conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
-or add envs_dirs (see “One-Time Setup”).
-
-Permission denied when installing in shared env
-That’s by design. Clone it to Home or submit a change request to maintainers.
-
-Solver is slow
-Use mamba (mamba install …) instead of conda install ….
 
 Example: End-to-End Workflow
 
@@ -550,7 +536,6 @@ conda config --add envs_dirs /stor/work/sedio/conda_envs
 conda config --add pkgs_dirs /stor/scratch/sedio/conda_pkgs
 conda config --add channels conda-forge
 conda config --set channel_priority strict
-
 
 Use a shared pipeline env:
 
@@ -564,8 +549,6 @@ conda create -p ~/conda-envs/met-pipe-dev --clone /stor/work/sedio/conda_envs/me
 conda activate ~/conda-envs/met-pipe-dev
 mamba install seaborn==0.13.2
 
-
-  
 ## 4. Instructions to specifc parts of the metabolomics pipeline
 
 ### Part 1: Sample Metadata and Setting up a UPLC Run:
