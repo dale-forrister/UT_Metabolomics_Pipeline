@@ -5,9 +5,15 @@
 
 ## Table of Contents
   - [Overview of POD Diskspace and Storage](#overview-of-pod-diskspace-and-storage)
-  - [Notes on Important Group Folders](notes-on-important-group-folders)
+    - [Home directory](#home-directory)  
+    - [Shared Storage on the Cluster](#shared-storage-on-the-cluster)
+  - [Moving Files Between Storage Spaces and On and Off Custer](#moving-files)  
+  - [Read Only Metabolomics Pipeline Folders](#read-only-metabolomics-pipeline-folders)
+    - [Using Conda](#using-conda)
+    - [software](#software]
+    - [github_repos](#github-repos)  
 
-#### Overview of POD Diskspace and storage
+## Overview of POD Diskspace and storage
 
 We each are given access to three directories:
 
@@ -15,47 +21,56 @@ We each are given access to three directories:
  - Work Directory - large storage - 16 TB of data that is shared by all users in our group
  - scratch - this is a temporary directory but is a #FAST disk so if you are reading and writing lots of files in your workflow it's useful to first copy your data to scratch and process from there
 
-##### Home directory
+### Home directory
+
 Your Home directory on a POD is located under /stor/home. Home directories are meant for storing small files. All home directories have a 100 GB quota.
-Home directory snapshots
+
+### Home directory snapshots
+
 Read-only snapshots are periodically taken of your home directory contents. Like Windows backups or Macintosh Time Machine, these backups only consume disk space for files that change (are updated or deleted), in which case the previous file state is "saved" in a snapshot.
 
 Snapshots are stored in a .zfs/snapshot directory under your home directory. To see a list of the snapshots you currently have:
 
+```{bash}
 ls ~/.zfs/snapshot
+```
+
 To recover a changed or deleted file, first identify the snapshot it is in, then just copy the file from that snapshot directory to its desired location.
 
-Home directory quotas
+#### Home directory quotas
 Your 100 GB Home directory includes snapshot data. These snapshot backups only consume disk space for files that change (are updated or deleted), in which case the previous file state is "saved" in the snapshot. Snapshots are taken frequently, so their data persists for several months even if the associated Home directory file has been deleted.
 
 The main consequence of this snapshot behavior is that they can cause your 100 GB Home directory quota to be exceeded, even after non-snapshot files have been removed.
 
 While you can view and copy files in your ~/.zfs/snapshot snapshot directories, you cannot write to them or delete them. Please contact us at rctf-support@utexas.edu to remove your snapshots if you exceed your Home directory quota.
-###### Warning: Watch Your Home Directory Size
+
+##### Warning: Watch Your Home Directory Size
 
 Your Home directory has a strict quota (a size limit). If you exceed it, programs may crash or refuse to start (e.g. RStudio won’t launch).
 
 Hidden sub-directories in your Home—especially those created by RStudio Server, JupyterHub, or Conda—can silently grow very large. Common culprits include:
 
+```
 ~/.local/share/rstudio
 ~/.local/share/jupyter
 ~/.cache
 ~/.conda
+```
 
 These folders often contain cached sessions, logs, or temporary files that can balloon into gigabytes.
 
 Run this command to see the size of the usual suspects:
 
-```bash
+```{bash}
 du -sh ~/.local/share/rstudio ~/.local/share/jupyter ~/.cache ~/.conda 2>/dev/null
 ```
 
 Example output:
-
+```
 2.5G    /home/username/.local/share/rstudio
 500M    /home/username/.local/share/jupyter
 1.2G    /home/username/.cache
-
+```
 ###### Solution: Move Big Folders to Scratch
 
 If one of these folders is too big, you can move it to your Scratch area (which has much more space) and replace it with a symbolic link. This makes the program think it’s still writing to Home, but the data actually lives in Scratch.
@@ -87,9 +102,9 @@ ln -sf /stor/scratch/Sedio/<yourusername>/home_extralocal_rstudio/ \
 ```
 That’s it — from now on, RStudio will keep writing to Scratch automatically.
 
-#### Shared Storage on the Cluster
+### Shared Storage on the Cluster
 
-##### Work vs. Scratch
+### Work vs. Scratch
 
 Each research group has two shared storage spaces:
 
@@ -98,7 +113,7 @@ Work → /stor/work/Sedio/
 Backed up weekly and archived to tape roughly once per year.
 Best for important research data and results that must be preserved.
 
-##### Our group will maintain - UPLC-MS Files in Work as well as common software we all want to access. i.e. sirius, mzmine and dreaMS
+#### Our group will maintain - UPLC-MS Files in Work as well as common software we all want to access. i.e. sirius, mzmine and dreaMS
 
 Scratch → /stor/scratch/Sedio/
 
@@ -129,11 +144,13 @@ Old project data may be moved into “long term archives (LTA)” or off the clu
 
 If you need something from tape, you’ll need to contact system admins.
 
-#### Moving Files Between Storage Areas
+## Moving Files
+
+### Moving Files Between Storage Areas
 
 Most users will need to shuffle data between Home, Work, and Scratch.
 
-##### Using mv (simple move)
+#### Using mv (simple move)
 
 Quickly move files if staying within the same filesystem:
 
@@ -142,40 +159,41 @@ mv ~/myproject/data.csv /stor/work/Sedio/<My_Specific_User_Folder>/myproject/
 
 ```
 
-Using rsync (safe copy)
+#### Using rsync (safe copy)
 
 rsync is preferred when copying because it preserves file permissions and can resume if interrupted.
 
-Example:
+##### Copy files from source to destination:
 
-```bash
 rsync -avrP ~/myproject/ /stor/scratch/Sedio/<My_Specific_User_Folder>/myproject_test/
+
 ```
-
-What the flags mean:
-
 -a → archive mode (preserves permissions, symlinks, timestamps, etc.)
-
--v → verbose (shows what’s happening)
-
--r → recursive (copies subdirectories)
-
--P → progress + partial (shows progress and allows resume if interrupted)
-
-Copy example
-```bash
-rsync -avrP /stor/work/Sedio/<My_Specific_User_Folder>/project1/ /stor/scratch/Sedio/<My_Specific_User_Folder>/project1_copy/
+-v → verbose
+-r → recursive (included in -a, so technically redundant)
+-P → shows progress, keeps partial files
 ```
+This copies everything in ~/myproject/ into the destination, overwriting files if the source has changed.
+⚠️ Important:
 
-This makes a full copy of project1 from Work into Scratch.
+Without --delete, the destination may accumulate old files no longer present in the source.
 
-#### Moving Large Files To/From Box with rclone
+Sync folders making source match destination exactly
+
+```bash
+rsync -avrP --delete ~/myproject/ /stor/scratch/Sedio/<user>/myproject_test/
+```
+With --delete, the all files that are not in source, but in destination will be removed. Meaning that source and destination will match exactly
+
+
+### Moving Large Files To/From Box with rclone
 
 For very large transfers (e.g., raw data, big outputs), use rclone. This tool syncs files between the cluster and Box (or other cloud storage).
 
-###### 1. Set up rclone with Box
+#### 1. Set up rclone with Box
 
 Run:
+
 ```bash
 rclone config
 ```
@@ -194,15 +212,15 @@ rclone will open a browser window for you to log into Box and grant access.
 
 Once complete, you’ll have a working Box remote (called box in this example).
 
-###### 2. Copy files to Box
+##### 2. Copy files to Box
 ```bash  
 rclone copy /stor/work/MyGroup/project1 box:/project1
 ```
-###### 3. Copy files from Box
+##### 3. Copy files from Box
 ```bash
 rclone copy box:/project1 /stor/work/MyGroup/project1
 ```
-######  4. Sync (mirror) a directory
+#####  4. Sync (mirror) a directory
 
 To make Box and your Work folder match exactly:
 ```bash
@@ -211,7 +229,7 @@ rclone sync /stor/work/MyGroup/project1 box:/project
 
 Warning: sync deletes files on the destination if they don’t exist on the source. Use with care!
 
-##### Automating Box Sync with Cron
+### Automating Box Sync with Cron
 
 If you regularly move files between the cluster and Box, you can schedule it with a cron job (automated task runner on Linux).
 
@@ -236,13 +254,26 @@ rclone sync ... → command to run.
 crontab -l
 ```
 
-### Notes on Important Group Foldres:
-#### a. Conda Envs
-#### b. Software
+## Read Only Metabolomics Pipeline Folders:
 
-#### Using Conda:
+DLF has created key folders within the main directory of the /stor/work/Sedio/ some of which are read only so that we can maintain the working metabolomics pipelines in a shared space. The key folders are:
+
+Read Only:
+- conda_envs
+- software
+- github_repos
+
+Read and Write by all users:
+- scratch - this is a sym link the main scratch space everything in here should be considered temporary and might get deleted periodically.
+  - scratch/user_directories - each user in our group gets there own scratch folder to store there own temporary files without the file storage limit. This is a fast drive so it can help to first copy here for some tasks
+- UPLCMS_Data - this will store UPLCMS_Data in raw format and have folders for converted mzML files for each project.
+- user_directories - each user in our group gets there own work folder to store there own things without the file storage limit.
+
+
+## Using Conda:
 Conda Environments for the Lab
-What is Conda (and why we use it)
+
+#### What is Conda (and why we use it)
 
 Conda is a package and environment manager. It lets you:
 
@@ -254,16 +285,14 @@ make work reproducible by saving and restoring environment definitions.
 
 We strongly recommend using mamba (a drop-in faster Conda replacement) for speed. You can still activate environments with conda activate … even if you install them with mamba.
 
-Lab Policy: Per-User vs Shared Environments
-Per-User (in Home)
+#### Lab Policy: Per-User vs Shared Environments
+  Per-User (in Home)
 
-Each user can create their own environments in Home for personal work.
+  Each user can create their own environments in Home for personal work.
 
-Pros: freedom to experiment.
+  Pros: freedom to experiment.
 
-Cons: can eat Home quota if you’re not careful.
-
-Shared (group-maintained)
+#### Shared (group-maintained)
 
 The lab maintains read-only, group environments for critical pipelines under:
 
@@ -282,52 +311,53 @@ One-Time Setup (so shared envs show up automatically)
 Add the shared env directory to your Conda search path and put Conda’s package cache in Scratch (saves Home quota):
 
 ##### Make sure conda is initialized for your shell
+```bash
 conda init bash  # or zsh, etc. Then re-open your shell.
-
+```
 ##### Tell conda where to look for environments (adds shared path)
+```bash
 conda config --add envs_dirs /stor/work/sedio/conda_envs
-
-##### (Recommended) Put package caches in Scratch, not Home
-conda config --add pkgs_dirs /stor/scratch/sedio/conda_pkgs
+```
 
 ##### (Optional) Prefer conda-forge channel and strict priority for reproducibility
+```bash
 conda config --add channels conda-forge
 conda config --set channel_priority strict
-
+```
 
 After this, conda env list will include the shared envs, and you’ll be able to do conda activate <name> if names are unique.
 
-Using the Shared Environments
-Activate
+#### Using the Shared and personal conda Environments
 
+You can list all of the environments that you have access to in your path using:
+
+#### List environments (includes shared if envs_dirs is set)
+```bash
+conda env list
+```
+#### Activate an enironment
+
+In order to use a specific environment you have to activate it:
+
+Full Path:
 You can activate by path (always works):
-
+```bash
 conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
-
+```
 
 If you added /stor/work/sedio/conda_envs to envs_dirs, you can also:
+
 ```{bash}
 conda activate <ENV_NAME>
 ```
-Deactivate
+
+#### Activate an enironment (go back to base env)
+
 ```{bash}
 conda deactivate
 ```
-Don’t modify shared envs
 
-Shared envs are read-only for stability. If you need something added:
-
-Ask a maintainer to update the env (see “Maintaining Shared Envs” below), or
-
-Clone it to your Home and modify locally. Note you do not have to clone in order to run common tasks but if you'd like to make changes to the pipeline you can clone it to test out those changes.
-
-```{bash}
-conda create -p ~/conda-envs/myproj --clone /stor/work/sedio/conda_envs/<ENV_NAME>
-conda activate ~/conda-envs/myproj
-mamba install <extra-packages>
-```
-
-Creating Your Own Environment (in Home)
+#### Creating Your Own Environment (in Home)
 ##### Faster installs with mamba
 ```{bash}
 mamba create -p ~/conda-envs/myproj python=3.11
@@ -338,6 +368,13 @@ conda activate ~/conda-envs/myproj
 ```{bash}
 mamba install numpy pandas jupyterlab
 ```
+
+You can also install using pip:
+
+```{bash}
+pip install numpy pandas jupyterlab
+```
+
 ##### Save a portable spec for reproducibility (best for Conda)
 ```{bash}
 conda env export --no-builds > ~/myproj_env.yml
@@ -349,42 +386,18 @@ mamba env create -p ~/conda-envs/myproj_recreated -f ~/myproj_env.yml
 
 Tip: use -p <path> instead of -n <name> so you control where the env lives and avoid Home clutter. Keep the pkgs cache in Scratch via pkgs_dirs (above) to save Home quota.
 
-Maintaining Shared Environments (for lab maintainers)
 
-Source of truth: an environment.yml (version-controlled in the lab repo).
-Deployment path: /stor/work/sedio/conda_envs/<ENV_NAME>
+#### Clone a shared environment to you local storage so you can edit it...
 
-Create or Update a Shared Env
-##### Build into the shared path from the YAML
-mamba env create -p /stor/work/sedio/conda_envs/<ENV_NAME> -f environment.yml
-##### (or update an existing one)
-mamba env update  -p /stor/work/sedio/conda_envs/<ENV_NAME> -f environment.yml
+Clone it to your Home and modify locally. Note you do not have to clone in order to run common tasks but if you'd like to make changes to the pipeline you can clone it to test out those changes.
 
-Freeze the Environment
+```{bash}
+conda create -p ~/conda-envs/myproj --clone /stor/work/sedio/conda_envs/<ENV_NAME>
+conda activate ~/conda-envs/myproj
+mamba install <extra-packages>
+```
 
-For exact reproducibility over time:
-
-##### Export with pinned versions but without build strings (portable)
-conda env export --no-builds -p /stor/work/sedio/conda_envs/<ENV_NAME> > environment.lock.yml
-
-
-Commit environment.yml and environment.lock.yml to the lab repo with a changelog.
-
-Set Permissions (group-read, maintainer-write)
-##### Set group ownership once (adjust group name)
-chgrp -R sedio /stor/work/sedio/conda_envs
-
-##### Everyone in the group can read/execute, only maintainers can write
-chmod -R g+rx,o-rwx /stor/work/sedio/conda_envs
-##### For the specific env when deploying:
-chmod -R g+rx /stor/work/sedio/conda_envs/<ENV_NAME>
-
-
-Policy: Users do not install/upgrade packages in shared envs. Changes go through a maintainer PR against environment.yml.
-
-Common Commands Cheat-Sheet
-##### List environments (includes shared if envs_dirs is set)
-conda env list
+### Common Commands Cheat-Sheet
 
 ##### Activate an env by path (always works)
 conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
@@ -400,4 +413,17 @@ conda env export --no-builds -p ~/conda-envs/analysis > ~/analysis_env.yml
 
 ##### Recreate from YAML
 mamba env create -p ~/conda-envs/analysis2 -f ~/analysis_env.yml
+
+ 
+## software
+
+/stor/work/Sedio/software/ is where we will install key software packages like sirius, mzmine msconver etc. 
+
+If you would like to add a piece of software let us know
+
+## github_repos
+
+It is often useful to down specific github repos and use them like you would a package. We will store shared ones here! If it's not going to be maintained for the group please put it in your home directory or  /stor/work/Sedio/user_directories/
+
+
 
