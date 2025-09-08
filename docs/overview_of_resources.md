@@ -404,20 +404,26 @@ mamba install <extra-packages>
 ### Common Commands Cheat-Sheet
 
 ##### Activate an env by path (always works)
+```{bash}
 conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
+```
 
 ##### Create a personal env in Home
+```{bash}
 mamba create -p ~/conda-envs/analysis python=3.11 r-base=4.3
-
+```
 ##### Install packages
+```{bash}
 mamba install -p ~/conda-envs/analysis numpy scipy scikit-learn
-
+```
 ##### Export (portable)
+```{bash}
 conda env export --no-builds -p ~/conda-envs/analysis > ~/analysis_env.yml
-
+```
 ##### Recreate from YAML
+```{bash}
 mamba env create -p ~/conda-envs/analysis2 -f ~/analysis_env.yml
-
+```
  
 ## software
 
