@@ -1,4 +1,4 @@
-#### Sedio Lab Group Metabolomics Pipeline Using the UT Austin Biomedical Research Computing Facility (BRCF) - aka Pods
+#### <center> Sedio Lab Group Metabolomics Pipeline Using the UT Austin Biomedical Research Computing Facility (BRCF) - aka Pods <center>
 
 
 ## Table of Contents
