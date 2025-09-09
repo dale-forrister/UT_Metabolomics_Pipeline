@@ -6,9 +6,7 @@
 
 ## Table of Contents
 - [Configuring `rclone` with UT\_Box (one-time)](#configuring-rclone-with-ut_box-one-time)
-  - [Create the remote](#create-the-remote)
-  - [Authorize from a browser](#authorize-from-a-browser)
-  - [Verify](#verify)
+
 - [Downloading from Core and Converting (with or without UV)](#downloading-from-core-and-converting-with-or-without-uv)
   - [1) Activate environment](#1-activate-environment)
   - [2) Prepare the CSV mapping file](#2-prepare-the-csv-mapping-file)
@@ -22,33 +20,39 @@
 > Each user configures their **own** `rclone` remote. The config is saved at `~/.config/rclone/rclone.conf`.
 
 ### Create the remote
-```bash
-# Check rclone is installed
-rclone version
-```
 
 # Start interactive setup
+
 ```bash
 rclone config
 ```
-When prompted:
+
+### When prompted: 
 
 n (New remote)
 
 Name: UT_Box ← use exactly this so the scripts work
 
 Storage: type box
+
 Client ID/Secret: press Enter to use rclone defaults (or supply your own if you have them)
+
 Edit advanced config? n
+
 Use auto config? If you’re on a headless cluster, answer n (No).
+
 Authorize from a browser
+
 If you answered No to auto config, rclone will print a command to run on a machine with a browser. On your laptop:
 rclone authorize "box"
+
 Log in to UT Box in the browser; when it prints a JSON token, copy it back into the cluster prompt where rclone config is waiting.
+
 Finish the wizard by accepting the defaults.
 
-Verify
-# You should see a listing (replace the path with something you can access)
+### Verify you can access and view your box files..
+
+This will list all the folders in your base directory of UT_Box:
 
 ```bash
 rclone lsd UT_Box:
@@ -58,9 +62,11 @@ This should list all of the folders you have access to...
 
 ## Downloading from Core and Converting (with or without UV)
 1) Activate environment
+   
 ```bash
 conda activate /stor/work/Sedio/conda_envs/mzmine_processing
 ```
+
 3) Prepare the CSV mapping file
 
 The CSV must have two columns: raw_input and mzML_path.
