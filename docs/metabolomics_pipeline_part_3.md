@@ -58,8 +58,15 @@ Set your output path to a directory in scratch as well:
 
 Once your batch file is configured, launch MZmine in headless mode:
 
+We have to be careful that mzmine doesn't take all of the nodes cores or memory. We can set the RAM  and then add --threads for number of cores. 
+
 ```
-mzmine -b /stor/scratch/$USER/your_project/workflow.batch.xml
+#Set the amount of RAM we use...
+export JAVA_OPTS="-Xmx64G"
+
+#launch mzmine headless
+mzmine -b /stor/scratch/$USER/your_project/workflow.batch.xml --threads 12
+
 ```
 
 This will process all the .mzML files according to your workflow and write results to the defined output path.
