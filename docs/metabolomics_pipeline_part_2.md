@@ -1,10 +1,3 @@
-# <div align="center"> Part 2: Moving Raw data files from the Metabolomics Core and Converting with MSConvert </div>
-
-[← Back to Main README](../README.md)
-
-
-## Table of Contents
-
 # <div align="center"> Part 2: Moving RAW data from the Metabolomics Core and Converting with MSConvert </div>
 
 [← Back to Main README](../README.md)
