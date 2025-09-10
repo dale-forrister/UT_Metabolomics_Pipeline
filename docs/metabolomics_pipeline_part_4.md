@@ -100,11 +100,7 @@ sirius \
 #write the summaries with the top 10 
 
 ```{bash}
-sirius summaries \
-  --top-k-summary 10 \
-  --format tsv \
-  --output /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/formula_summaries \
-  --project /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/sirius_project
+sirius -o /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/sirius_project summaries --top-k-summary 10 --format tsv
 ```
 
 
