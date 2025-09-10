@@ -35,9 +35,9 @@ import h5py
 ```
 
 ```{pyton}
-embs = dreams_embeddings('/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_sirius.mgf')
+h5_path ="/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_sirius.mgf"
 
-h5_path ="/stor/work/AMDG_SedioLab/UT_dreaMS_NPclassifier/data/npclassifier_mass_spec_gym/Massspec_gym_NPClassifier_All_Smiles_Output.hdf5"
+embs = dreams_embeddings(h5_path)
 
 def add_column_to_hdf5(h5_path, column_data, column_name):
     """
@@ -54,7 +54,8 @@ def add_column_to_hdf5(h5_path, column_data, column_name):
         f.create_dataset(column_name, data=column_data)
 
 add_column_to_hdf5(h5_path, embs, "DREAMS_EMBEDDING")
-
+```
+```{python}
 #Step 3: #now embeddings can be reloaded from the HDF5 file using the MSData class  
 # Load your existing MSData file (with spectra)
 h5_path ="/stor/work/AMDG_SedioLab/UT_dreaMS_NPclassifier/data/npclassifier_mass_spec_gym/Massspec_gym_NPClassifier_All_Smiles_Output.hdf5"
@@ -64,7 +65,6 @@ msdata = MSData.load(h5_path)
 
 #This tells you what columns are available in the MSData object.
 msdata.columns() 
-
 
 #get values from a specfic column, e.g., 'FEATURE_ID' or 'FORMULA'
 msdata.get_values('TITLE')[1:10]
