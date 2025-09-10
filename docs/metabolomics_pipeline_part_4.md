@@ -33,9 +33,10 @@ from dreams.utils.data import MSData
 import h5py
 
 ```
+## Note we should use the gnps version of the mgf because this already includes concensus spectra (one per featureID)
 
 ```{pyton}
-h5_path ="/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_sirius.mgf"
+h5_path ="/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_gnps.mgf"
 
 embs = dreams_embeddings(h5_path)
 
@@ -74,5 +75,36 @@ msdata.get_values('DREAMS_EMBEDDING')  # Or msdata['FORMULA']
 
 #msdata is now an object in memory. To close...
 del msdata
-
 ```
+
+## Run Sirius
+
+Activate the sirius conda environment 
+
+```{bash}
+conda activate sirius622
+```
+```{bash}
+sirius -h 
+```
+
+#This is a test run that works but we need to do some testing to come up with the full set of parameters to use...
+```{bash}
+sirius \
+  -i /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_sirius.mgf \
+  --project /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/sirius_project \
+  --cores 12 \ # important or it will gobble up all the cores
+  formulas -p orbitrap -I [M+H]+ --ppm-max 5 --ppm-max-ms2 10
+```
+
+#write the summaries with the top 10 
+
+```{bash}
+sirius summaries \
+  --top-k-summary 10 \
+  --format tsv \
+  --output /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/formula_summaries \
+  --project /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/sirius_project
+```
+
+
