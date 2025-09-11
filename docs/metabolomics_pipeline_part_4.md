@@ -59,7 +59,6 @@ add_column_to_hdf5(h5_path, embs, "DREAMS_EMBEDDING")
 ```{python}
 #Step 3: #now embeddings can be reloaded from the HDF5 file using the MSData class  
 # Load your existing MSData file (with spectra)
-h5_path ="/stor/work/AMDG_SedioLab/UT_dreaMS_NPclassifier/data/npclassifier_mass_spec_gym/Massspec_gym_NPClassifier_All_Smiles_Output.hdf5"
 
 #Example of how to work with the MSData object
 msdata = MSData.load(h5_path)
@@ -102,6 +101,11 @@ You can download the library file [here (MassSpecGym_DreaMS.hdf5)](https://huggi
 in_pth = Path("/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_gnps.hdf5")
 # Load the library data
 lib_pth = Path('/PATH/TO/MassSpecGym_DreaMS.hdf5')
+
+#try here:
+
+h5_path ="/stor/work/AMDG_SedioLab/UT_dreaMS_NPclassifier/data/npclassifier_mass_spec_gym/Massspec_gym_NPClassifier_All_Smiles_Output.hdf5"
+
 
 msdata_query = MSData.load(in_pth)
 embs_query = msdata_query[DREAMS_EMBEDDING]
