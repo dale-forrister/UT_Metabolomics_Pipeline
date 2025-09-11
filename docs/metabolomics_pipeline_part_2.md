@@ -78,6 +78,7 @@ mzML_path is the destination file path for the output .mzML
 Example (mapping.csv):
 
 raw_input,mzML_path
+
 UT_Box:2025_Sedio/Jul/9980/I1_C1_1.raw,/stor/work/Sedio/UPLCMS_Data/Test_UV_Data/I1_C1_1.mzML
 UT_Box:2025_Sedio/Jul/9980/I1_C1_2.raw,/stor/work/Sedio/UPLCMS_Data/Test_UV_Data/I1_C1_2.mzML
 UT_Box:2025_Sedio/Jul/9980/I1_C1_3.raw,/stor/work/Sedio/UPLCMS_Data/Test_UV_Data/I1_C1_3.mzML
