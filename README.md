@@ -61,7 +61,7 @@ Before you begin, make sure you have installed Visual Studio Code (VS Code). You
   * **Windows**: [How to install Visual Studio Code on Windows 10/11](https://www.youtube.com/watch?v=2Gz-uuQWxu4)
   * **macOS**: [How to Install Visual Studio Code on Mac](https://www.youtube.com/watch?v=w0xBQHKjoGo)
 
-It is also recommended that you read the first two parts of ["Practical Computing for Biologists" by Haddock and Dunn](<docs/Practical Computing for Biologists_new.pdf>) to learn the basics of Linux and the Shell.
+It is also recommended that you read the first two parts of ["Practical Computing for Biologists" by Haddock and Dunn](<Practical Computing for Biologists.pdf>) to learn the basics of Linux and the Shell.
 
 
 3.  We currently have three nodes available on POD (server addresses listed below):
