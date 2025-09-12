@@ -3,18 +3,18 @@
 
 
 ## Table of Contents
-- [ Sedio Lab Group Metabolomics Pipeline ](#-sedio-lab-group-metabolomics-pipeline-)
-  - [ Using the UT Austin Biomedical Research Computing Facility (BRCF) - aka Pods ](#-using-the-ut-austin-biomedical-research-computing-facility-brcf---aka-pods-)
-  - [Table of Contents](#table-of-contents)
-    - [Create Your POD Account](#create-your-pod-account)
-    - [Connecting to CPU Rental Pods:](#connecting-to-cpu-rental-pods)
-  - [1. Connecting to a Remote Server through the browser using ondemand](#1-connecting-to-a-remote-server-through-the-browser-using-ondemand)
-      - [2. Connecting to a Remote Server with VS Code](#2-connecting-to-a-remote-server-with-vs-code)
-      - [Prerequisites](#prerequisites)
-      - [Step 1: Install the "Remote - SSH" Extension](#step-1-install-the-remote---ssh-extension)
-      - [Step 2: Connect to the Remote Server](#step-2-connect-to-the-remote-server)
-      - [Step 3: Authenticate and Connect](#step-3-authenticate-and-connect)
-      - [Step 4: Open a Folder on the Remote Server](#step-4-open-a-folder-on-the-remote-server)
+- [Creating an Account](#create-your-pod-account)
+- [Connecting to Pods](#connecting-to-cpu-rental-pods)
+  - [Connecting to a Remote Server with Ondemand](#1-connecting-to-a-remote-server-through-the-browser-using-ondemand)
+  - [Connecting to a Remote Server with VS Code](#2-connecting-to-a-remote-server-with-vs-code)
+- [Overview of Resources](docs/overview_of_resources.md)
+  - Overview of POD Diskspace and Storage
+  - Notes on Important Group Folders
+- Instructions for specifc parts of the metabolomics pipeline
+  - [Part 1: Sample Metadata and Setting up a UPLC Run](docs/metabolomics_pipeline_part_1.md)
+  - [Part 2: Moving Raw data files from the Metabolomics Core and Converting with MSConvert](docs/metabolomics_pipeline_part_2.md)
+  - [Part 3: Processing Raw data with MZmine](docs/metabolomics_pipeline_part_3.md)
+  - [Part 4: Post Processing W/ Sirius and Dreams](docs/metabolomics_pipeline_part_4.md)
 ### Create Your POD Account
 
 1.  Request a POD account [here](https://rctf-account-request.icmb.utexas.edu/). You can also learn more about POD resources [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976153/POD+Accounts).
