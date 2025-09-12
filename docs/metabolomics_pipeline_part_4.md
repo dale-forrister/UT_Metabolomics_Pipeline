@@ -14,18 +14,18 @@
 
 Step 1: Activate dreams
 
-```{bash}
+```bash
 conda activate /stor/work/Sedio/dreams
 
 ```
 
 To Run Dreams you have to use python. Once conda dreams is activated you can just type python and your bash terminal will open python
 
-```{bash}
+```bash
 python
 ```
 
-```{python}
+```python
 #Calculate dreams embeddings from Panama MGF file. Note this is the GNPS MGF so spectra have been clustered to have one spectra per feature
 from dreams.api import dreams_embeddings
 import numpy as np
@@ -35,10 +35,12 @@ import h5py
 ```
 ## Note we should use the gnps version of the mgf because this already includes concensus spectra (one per featureID)
 
-```{pyton}
-h5_path ="/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_gnps.mgf"
+hdf5 file will be auto generated when you load MS file with DreaMS.
+```python
+h5_path = "/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_gnps.hdf5"
+mgf_path = "/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_gnps.mgf"
 
-embs = dreams_embeddings(h5_path)
+embs = dreams_embeddings(mgf_path)
 
 def add_column_to_hdf5(h5_path, column_data, column_name):
     """
@@ -54,9 +56,10 @@ def add_column_to_hdf5(h5_path, column_data, column_name):
             del f[column_name]
         f.create_dataset(column_name, data=column_data)
 
-add_column_to_hdf5(h5_path, embs, "DREAMS_EMBEDDING")
+add_column_to_hdf5(h5_path, embs, "DreaMS_embedding")
 ```
-```{python}
+
+```python
 #Step 3: #now embeddings can be reloaded from the HDF5 file using the MSData class  
 # Load your existing MSData file (with spectra)
 
@@ -67,10 +70,10 @@ msdata = MSData.load(h5_path)
 msdata.columns() 
 
 #get values from a specfic column, e.g., 'FEATURE_ID' or 'FORMULA'
-msdata.get_values('TITLE')[1:10]
+msdata.get_values('MSLEVEL')[1:10]
 
 #get emeddings from a specfic column, e.g., 'FEATURE_ID' or 'FORMULA'
-msdata.get_values('DREAMS_EMBEDDING')  # Or msdata['FORMULA']
+msdata.get_values('DreaMS_embedding')  # Or msdata['FORMULA']
 
 #msdata is now an object in memory. To close...
 del msdata
@@ -93,19 +96,14 @@ from dreams.definitions import *
 
 Load your query dataset and the library with pre-computed DreaMS embeddings.
 
-You can download the library file [here (MassSpecGym_DreaMS.hdf5)](https://huggingface.co/datasets/roman-bushuiev/GeMS/blob/main/data/auxiliary/MassSpecGym_DreaMS.hdf5).
+You can download the library file [here (MassSpecGym_DreaMS.hdf5)](https://huggingface.co/datasets/roman-bushuiev/GeMS/blob/main/data/auxiliary/MassSpecGym_DreaMS.hdf5) (We have already downloaded see below).
 
 ```python
 # Load your query data (the HDF5 file processed in the previous step)
 # NOTE: The .mgf file is converted to .hdf5 after computing embeddings
 in_pth = Path("/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_gnps.hdf5")
 # Load the library data
-lib_pth = Path('/PATH/TO/MassSpecGym_DreaMS.hdf5')
-
-#try here:
-
-h5_path ="/stor/work/AMDG_SedioLab/UT_dreaMS_NPclassifier/data/npclassifier_mass_spec_gym/Massspec_gym_NPClassifier_All_Smiles_Output.hdf5"
-
+lib_pth = Path('/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/MassSpecGym_DreaMS.hdf5')
 
 msdata_query = MSData.load(in_pth)
 embs_query = msdata_query[DREAMS_EMBEDDING]
@@ -144,8 +142,10 @@ for i, topk in enumerate(tqdm(topk_cands)):
             'library_ID': msdata_lib.get_values('IDENTIFIER', j),
             'DreaMS_similarity': sims[i, j],
         })
+
 df = pd.DataFrame(df)
-df.to_csv('library_matching_results.csv', index=False)
+df.to_csv('/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/library_matching_results.csv', index=False)
+print(df.head)
 ```
 
 -----
@@ -198,12 +198,16 @@ for u, v in tqdm(G.edges(), desc='Adding edge attributes'):
 Export the resulting network to `Cytoscape` for visualization.
 
 ```python
-nx.write_graphml(G, 'molecular_network.graphml')
+nx.write_graphml(G, '/stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/molecular_network.graphml')
 ```
+It's sad that we should download [Cytoscape](https://cytoscape.org/) to visulize this graph.
+
+Open Cytoscape --> click File --> Import --> Network from File --> find this file
+<img width="2396" height="1580" alt="image" src="https://github.com/user-attachments/assets/84fcc898-e9a5-4392-848d-b7e3a471254b" />
 
 -----
 
-### 4. Clustering MS/MS spectra with LSH
+### 4. Clustering MS/MS spectra with LSH (4-5 are optional sections)
 
 Perform fast clustering of MS/MS spectra using Locality-Sensitive Hashing (LSH) to identify highly similar or near-duplicate spectra.
 
