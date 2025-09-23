@@ -24,6 +24,10 @@
 # Start interactive setup
 
 ```bash
+conda activate /stor/work/Sedio/conda_envs/mzmine_processing
+```
+
+```bash
 rclone config
 ```
 
