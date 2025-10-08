@@ -1,4 +1,4 @@
-# <div align="center"> Part 4: Post Processing W/ Sirius and Dreams </div>
+# <div align="center"> Part 4: Post Processing W/ Sirius and dreaMS </div>
 
 [← Back to Main README](../README.md)
 
