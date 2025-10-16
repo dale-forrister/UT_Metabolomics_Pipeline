@@ -12,6 +12,8 @@ MZmine is installed in our shared environment and can be run in headless (batch)
 
 Before running anything, load the conda environment where MZmine is available:
 
+*** NOTE you have to have configured conda – see [Using Conda](docs/overview_of_resources.md#using-conda)
+
 ```{bash}
 conda activate /stor/work/Sedio/conda_envs/mzmine_processing
 ```
