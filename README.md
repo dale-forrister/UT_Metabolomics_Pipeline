@@ -96,6 +96,9 @@ Once the extension is installed, a new "Remote Explorer" icon will appear in the
 
 3.  Click the **+** (**Add New**) icon to add a new SSH connection.
 
+  *** Make sure you use the POD Specific Password. You can verify and change your password POD account [here](https://rctf-account-request.icmb.utexas.edu/).
+
+
 4.  Enter the SSH command to connect to your server in the following format:
 
     ```bash
