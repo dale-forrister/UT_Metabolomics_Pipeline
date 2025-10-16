@@ -53,7 +53,7 @@ Follow this link depending on which compute node you are are targeting.
   <summary>N.B. make sure to pick your pod account password.</summary>
   Especially if you are using a password manager, make sure you use the POD Specific Password. 
   This will likely be the password associated to a URL that includes 'icmb.utexas.edu'.
-  You can verify and change your password POD account [here](https://rctf-account-request.icmb.utexas.edu/).
+  You can verify and change your password POD account <a href="https://rctf-account-request.icmb.utexas.edu/">here</a>.
 </details>
 
 #### 2. Connecting to a Remote Server with VS Code
