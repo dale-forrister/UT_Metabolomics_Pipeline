@@ -102,6 +102,7 @@ Once the extension is installed, a new "Remote Explorer" icon will appear in the
 
   *** Make sure you use the POD Specific Password. You can verify and change your password POD account [here](https://rctf-account-request.icmb.utexas.edu/).
 
+*** it may ask about the platform of the remote host - the pod is linux 
 
 4.  Enter the SSH command to connect to your server in the following format:
 
