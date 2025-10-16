@@ -49,6 +49,8 @@ Follow this link depending on which compute node you are are targeting.
 
   When you are coding here you will be running on the cluster through web browser
 
+  *** Make sure you use the POD Specific Password. You can verify and change your password POD account [here](https://rctf-account-request.icmb.utexas.edu/).
+
 
 #### 2. Connecting to a Remote Server with VS Code
 
