@@ -11,7 +11,8 @@
   - [Read Only Metabolomics Pipeline Folders](#read-only-metabolomics-pipeline-folders)
     - [Using Conda](#using-conda)
     - [software](#software)
-    - [github_repos](#github-repos)  
+    - [github_repos](#github-repos)
+    - [setting up rclone] #rclone 
 
 ## Overview of POD Diskspace and storage
 
@@ -190,27 +191,46 @@ With --delete, the all files that are not in source, but in destination will be 
 
 For very large transfers (e.g., raw data, big outputs), use rclone. This tool syncs files between the cluster and Box (or other cloud storage).
 
-#### 1. Set up rclone with Box
+#rclone
 
+#### 1. Set up rclone with Box
+## Configuring `rclone` with UT_Box (one-time)
 Run:
 
 ```bash
 rclone config
 ```
 
-Follow prompts:
+When prompted:
+n (New remote)
 
-Choose n for a new remote.
+Name: UT_Box ← use exactly this so the scripts work
 
-Give it a name (e.g., box).
+Storage: type box
 
-Select Box from the provider list.
+Client ID/Secret: press Enter to use rclone defaults (or supply your own if you have them)
 
-Accept defaults unless you need advanced options.
+Edit advanced config? n
 
-rclone will open a browser window for you to log into Box and grant access.
+Use auto config? If you’re on a headless cluster, answer n (No).
 
-Once complete, you’ll have a working Box remote (called box in this example).
+Authorize from a browser
+
+If you answered No to auto config, rclone will print a command to run on a machine with a browser. On your laptop: rclone authorize "box"
+
+Log in to UT Box in the browser; when it prints a JSON token, copy it back into the cluster prompt where rclone config is waiting.
+
+Finish the wizard by accepting the defaults.
+
+Verify you can access and view your box files..
+This will list all the folders in your base directory of UT_Box:
+
+```bash
+rclone lsd UT_Box:
+```
+
+This should list all of the folders you have access to...
+
 
 ##### 2. Copy files to Box
 ```bash  
