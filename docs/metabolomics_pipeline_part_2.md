@@ -15,7 +15,6 @@
 
 ---
 
-## Configuring `rclone` with UT_Box (one-time)
 
 > Each user configures their **own** `rclone` remote. The config is saved at `~/.config/rclone/rclone.conf`.
 
@@ -27,35 +26,8 @@
 ```bash
 conda activate /stor/work/Sedio/conda_envs/mzmine_processing
 ```
+### You will need to make sure rclone is configured and you have access and can view your box files...
 
-```bash
-rclone config
-```
-
-### When prompted: 
-
-n (New remote)
-
-Name: UT_Box ← use exactly this so the scripts work
-
-Storage: type box
-
-Client ID/Secret: press Enter to use rclone defaults (or supply your own if you have them)
-
-Edit advanced config? n
-
-Use auto config? If you’re on a headless cluster, answer n (No).
-
-Authorize from a browser
-
-If you answered No to auto config, rclone will print a command to run on a machine with a browser. On your laptop:
-rclone authorize "box"
-
-Log in to UT Box in the browser; when it prints a JSON token, copy it back into the cluster prompt where rclone config is waiting.
-
-Finish the wizard by accepting the defaults.
-
-### Verify you can access and view your box files..
 
 This will list all the folders in your base directory of UT_Box:
 
@@ -64,6 +36,9 @@ rclone lsd UT_Box:
 ```
 
 This should list all of the folders you have access to...
+
+*** NOTE if rclone is not configured follow these steps - [configure rclone](docs/overview_of_resources.md#rclone)
+
 
 ## Downloading from Core and Converting (with or without UV)
 1) Activate environment
@@ -97,55 +72,52 @@ UT_Box:2025_Sedio/Jul/9980/I1_C2_5.raw,/stor/work/Sedio/UPLCMS_Data/Test_UV_Data
 
 3) Run the converter
 
-The script stages all RAWs to the fast scratch area first, then converts.
-Adjust the script path below if you keep it somewhere else.
+## Basic mzML Converter - this will remove all UV data to keep the file sizes down in mzMine. 
 
-Default (UV/PDA spectra removed; keep basic chromatograms):
+You have to change the path and name of the csv file.
+This will save the files based on the mzML_path column in your csv
 
 ```bash
-python /stor/work/Sedio/UPLCMS_Data/msconvert-batch.py \
+python3 msconvert-batch.py \
   --csv /path/to/mapping.csv \
+  --scratch-dir /ssd1/temp_msconvert \
   --jobs 4
 ```
 
-Include UV/PDA (process entire file, all chromatograms):
+### Note, once you are happy with the conversion please remove the scratch directory that was created...
 
 ```bash
-python /stor/work/Sedio/UPLCMS_Data/msconvert-batch.py \
+rm -rf /ssd1/temp_msconvert/*
+```
+## Include UV Converter - to keep the uv data in the files add the flagg --include-uv
+
+* For simplicity you can just include this unless you have ALOT of files and are worried mzmine can't handle it. 
+
+```bash
+python3 msconvert-batch.py \
   --csv /path/to/mapping.csv \
   --include-uv \
+  --scratch-dir /ssd1/temp_msconvert \
   --jobs 4
 ```
-
-4) Optional flags
-
-Force re-download everything from Box/local sources (refresh stage):
+### Note, once you are happy with the conversion please remove the scratch directory that was created...
 
 ```bash
-python /stor/work/Sedio/UPLCMS_Data/msconvert-batch.py \
-  --csv /path/to/mapping.csv \
-  --force-download \
-  --jobs 4
+rm -rf /ssd1/temp_msconvert/*
 ```
 
-Cleanup staged RAWs from scratch after successful conversion:
+## Optionally you can also have it automatically push the files back up to box if you give it a directory in box you want them copied to. This will create two copies.
+
+python3 msconvert-batch.py \
+  --csv /path/to/mapping.csv \
+  --include-uv \
+  --scratch-dir /ssd1/temp_msconvert \
+  --jobs 4 \
+  --push-remote UT_Box:2025_Sedio/Processed_Data \
+  --rclone-args "--transfers 8 --checkers 16 --progress"
+
+### Note, once you are happy with the conversion please remove the scratch directory that was created...
 
 ```bash
-python /stor/work/Sedio/UPLCMS_Data/msconvert-batch.py \
-  --csv /path/to/mapping.csv \
-  --cleanup \
-  --jobs 4
+rm -rf /ssd1/temp_msconvert/*
 ```
-
-Notes
-
-Staging directory (default): /stor/work/Sedio/scratch/Temp_Raw_UPLC_Data/
-
---jobs controls parallel files converted at once (start with 2–4 and adjust).
-
-Flags can be combined as needed (e.g., --include-uv --cleanup --jobs 6).
-
-
-
-
-
