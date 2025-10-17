@@ -78,7 +78,7 @@ You have to change the path and name of the csv file.
 This will save the files based on the mzML_path column in your csv
 
 ```bash
-python3 msconvert-batch.py \
+python3 /stor/work/Sedio/software/msconvert/msconvert-batch.py \
   --csv /path/to/mapping.csv \
   --scratch-dir /ssd1/temp_msconvert \
   --jobs 4
@@ -94,7 +94,7 @@ rm -rf /ssd1/temp_msconvert/*
 * For simplicity you can just include this unless you have ALOT of files and are worried mzmine can't handle it. 
 
 ```bash
-python3 msconvert-batch.py \
+python3 /stor/work/Sedio/software/msconvert/msconvert-batch.py \
   --csv /path/to/mapping.csv \
   --include-uv \
   --scratch-dir /ssd1/temp_msconvert \
@@ -108,7 +108,7 @@ rm -rf /ssd1/temp_msconvert/*
 
 ## Optionally you can also have it automatically push the files back up to box if you give it a directory in box you want them copied to. This will create two copies.
 
-python3 msconvert-batch.py \
+python3 /stor/work/Sedio/software/msconvert/msconvert-batch.py \
   --csv /path/to/mapping.csv \
   --include-uv \
   --scratch-dir /ssd1/temp_msconvert \
@@ -120,4 +120,48 @@ python3 msconvert-batch.py \
 
 ```bash
 rm -rf /ssd1/temp_msconvert/*
+```
+
+## For Reference if you are converting off the POD. 
+This code using mzmine that has been installed w/ the docker image https://hub.docker.com/r/proteowizard/pwiz-skyline-i-agree-to-the-vendor-licenses so that i can be run on linux but contains the vendor specific files. On a windows or on a mac w/ the docker you can convert them samples you self using the following flags...
+
+MS-Only Conversion (No UV)
+```bash
+msconvert.exe SAMPLE.raw \
+  --mzML \
+  --filter "peakPicking true 1-" \
+  --filter "zeroSamples removeExtra" \
+  --64 \
+  --zlib \
+  --filter "msLevel 1-" \
+  -o .
+```
+ W/ UV 
+
+```bash
+msconvert.exe SAMPLE.raw \
+  --mzML \
+  --filter "peakPicking true 1-" \
+  --filter "zeroSamples removeExtra" \
+  --64 \
+  --zlib \
+  --chromatogramFilter "index 0-" \
+  -o .
+
+```
+
+If you run on a mac though docker you can run like this...
+
+```bash
+docker run --rm \
+  -v /path/to/raws:/data \
+  proteowizard/pwiz-skyline-i-agree-to-the-vendor-licenses \
+  wine msconvert.exe /data/SAMPLE.raw \
+    --mzML \
+    --filter "peakPicking true 1-" \
+    --filter "zeroSamples removeExtra" \
+    --64 \
+    --zlib \
+    --chromatogramFilter "index 0-" \
+    -o /data
 ```
