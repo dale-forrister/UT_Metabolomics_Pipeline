@@ -24,58 +24,80 @@ Now the mzmine command should be available on your PATH. You can check with:
 mzmine -h
 ```
 
-## 2. Copy your raw data to scratch
+## 2. Generate a project-specific .mzbatch
 
-Never run directly from your home or work directory — use scratch for fast I/O. Copy your .mzML files into your scratch user directory:
+Use the update script to:
+
+point the batch to your raw files (from metadata),
+
+rewrite all export paths into your --output_dir,
+
+prefix all export filenames with --project_name,
+
+and save the new batch file as <output_dir>/<project_name>.mzbatch.
+
+Required inputs
+
+--mzbatch: Path to the standard/template MZmine batch file (e.g., the lab’s canonical .mzbatch).
+
+--metadata: TSV/CSV containing at least a column of RAW file paths (e.g., mzML_path or FilePath). Optional columns can mark blanks (e.g., Type = Blank).
+
+--output_dir: Where to write all outputs and the new project batch.
+
+--project_name: Prefix used for every exported file name (and the name of the saved .mzbatch).
+
+Example command
 
 ```{bash}
-cp -r /stor/work/Sedio/your_project/data/*.mzML /stor/scratch/$USER/your_project/
-```
 
-Make sure all your input .mzML files are inside this scratch directory.
-
-## 3. Edit your batch file
-
-MZmine workflows are defined in XML batch files. You can prepare these locally with the MZmine GUI, then upload them to the cluster.
-
-Open your batch file (workflow.batch.xml) in a text editor.
-
-Update the input file path to point to your scratch directory, for example:
+python /stor/work/Sedio/software/mzmine/update_mzmine_batch.py \
+  --mzbatch /stor/work/Sedio/software/mzmine/Sedio_Lab_mzmine_V4.mzbatch \
+  --metadata /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/DemoData_Carya/demo_caryaTRC_metadata.tsv \
+  --output_dir /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/Mzmine_outputs/ \
+  --project_name Ecomet_Interspecific_Demo
 
 ```
-<batch>
-  <parameter name="Input file" value="/stor/scratch/$USER/your_project/*.mzML"/>
-  <!-- additional workflow steps -->
-</batch>
+What you should see
+
+New batch file: /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/Mzmine_outputs/Ecomet_Interspecific_Demo.mzbatch
+
+All output file entries in the batch rewritten into the same --output_dir, with filenames starting with Ecomet_Interspecific_Demo_…
+
+## 3. Run MZmine (headless) with scratch tmpdir
+
+Set a large heap and a fast local tmp dir (scratch). Ensure the tmp folder exists and is writable.
+
+### create the scratch dir if needed
+```{bash}
+mkdir -p /ssd1/mzmine_tmp
 ```
 
-
-Set your output path to a directory in scratch as well:
-
-```
-<parameter name="Output file" value="/stor/scratch/$USER/your_project/results/output.csv"/>
+### memory + tmpdir (adjust -Xmx to your node’s RAM)
+```{bash}
+export JDK_JAVA_OPTIONS="-Xmx400G -Djava.io.tmpdir=/ssd1/mzmine_tmp"
 ```
 
-## 4. Run MZmine headless
+### run MZmine headless
 
-Once your batch file is configured, launch MZmine in headless mode:
-
-We have to be careful that mzmine doesn't take all of the nodes cores or memory. We can set the RAM  and then add --threads for number of cores. 
-
+```{bash}
+/stor/work/Sedio/software/mzmine/bin/mzmine \
+  -b /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/Mzmine_outputs/Ecomet_Interspecific_Demo.mzbatch \
+  --threads 8 \
+  -t /ssd1/mzmine_tmp
 ```
-#Set the amount of RAM we use...
-export JAVA_OPTS="-Xmx64G"
+### remove the temp directory. 
 
-#launch mzmine headless
-mzmine -b /stor/scratch/$USER/your_project/workflow.batch.xml --threads 12
-
+```{bash}
+rm -r /ssd1/mzmine_tmp
 ```
+Flags explained
 
-This will process all the .mzML files according to your workflow and write results to the defined output path.
+-b: Path to the project batch created in Step 2 (should be <output_dir>/<project_name>.mzbatch).
 
-## 5. Collect results
+--threads: Parallel worker threads for MZmine. Tune based on CPU resources.
 
-When the run is complete, copy the results back to your work directory for long-term storage:
-```
-cp -r /stor/scratch/$USER/your_project/results /stor/work/Sedio/your_project/
-```
+-t: Scratch/temp directory. Use fast local SSD to speed up I/O.
+
+JDK_JAVA_OPTIONS: Java memory and tmpdir. Set -Xmx at ~70–80% of node RAM to avoid OOM.
+
+## 4. Summary of the output files that are generated
