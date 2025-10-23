@@ -191,7 +191,7 @@ With --delete, the all files that are not in source, but in destination will be 
 
 For very large transfers (e.g., raw data, big outputs), use rclone. This tool syncs files between the cluster and Box (or other cloud storage).
 
-rclone
+# rclone
 
 #### 1. Set up rclone with Box
 ## Configuring `rclone` with UT_Box (one-time)
