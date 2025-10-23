@@ -21,7 +21,7 @@
 ### Create the remote
 
 # Start interactive setup
-*** NOTE you have to have configured conda – see [Using Conda](overview_of_resources.md#Using Conda)
+*** NOTE you have to have configured conda – see [Using Conda](./overview_of_resources.md#Using Conda)
 
 ```bash
 conda activate /stor/work/Sedio/conda_envs/mzmine_processing
