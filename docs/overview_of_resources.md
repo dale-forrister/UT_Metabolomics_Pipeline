@@ -12,7 +12,7 @@
     - [Using Conda](#using-conda)
     - [software](#software)
     - [github_repos](#github-repos)
-    - [setting up rclone] (#rclone)
+    - [setting up rclone](#rclone)
 
 ## Overview of POD Diskspace and storage
 
