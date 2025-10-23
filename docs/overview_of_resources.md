@@ -195,7 +195,11 @@ For very large transfers (e.g., raw data, big outputs), use rclone. This tool sy
 
 Rclone is a package/program that allows you to quickly and securely move files back and forth from a remote cloud server (i.e. google drive, Box etc) to the POD using the terminal. 
 
-To set it up rclone you need to connect and authenticate. You will need to have rclone installed on your own personal computer. You can install it following these instruction on a mac ([install rclone]https://rclone.org/install/#macos-brew) using homebrew ([install homebrew here](https://brew.sh/))
+To set it up rclone you need to connect and authenticate. You will need to have rclone installed on your own personal computer. You can install it following these instruction on a mac 
+[install rclone mac](https://rclone.org/install/#macos-brew) 
+Note you may need to install homebrew ([install homebrew here](https://brew.sh/))
+
+[install rclone pc](https://rclone.org/install/#windows)
 
 #### 1. Set up rclone with Box
 ## Configuring `rclone` with UT_Box (one-time)
