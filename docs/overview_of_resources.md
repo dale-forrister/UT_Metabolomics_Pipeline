@@ -320,7 +320,7 @@ We strongly recommend using mamba (a drop-in faster Conda replacement) for speed
 The lab maintains read-only, group environments for critical pipelines under:
 
 ```{bash}
-/stor/work/sedio/conda_envs
+/stor/work/Sedio/conda_envs
 ```
 
 Pros: identical, reproducible setups for everyone; large space; backed up.
@@ -368,7 +368,7 @@ Make sure Conda is initialized for your shell (see above).
 Add the shared env directory to your Conda search path:
 
 ```{bash}
-conda config --add envs_dirs /stor/work/sedio/conda_envs
+conda config --add envs_dirs /stor/work/Sedio/conda_envs
 ```
 
 After this, conda env list will include the shared envs, and you’ll be able to do conda activate <name> if names are unique.
@@ -388,10 +388,10 @@ In order to use a specific environment you have to activate it:
 Full Path:
 You can activate by path (always works):
 ```bash
-conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
+conda activate /stor/work/Sedio/conda_envs/<ENV_NAME>
 ```
 
-If you added /stor/work/sedio/conda_envs to envs_dirs, you can also:
+If you added /stor/work/Sedio/conda_envs to envs_dirs, you can also:
 
 ```{bash}
 conda activate <ENV_NAME>
@@ -438,7 +438,7 @@ Tip: use -p <path> instead of -n <name> so you control where the env lives and a
 Clone it to your Home and modify locally. Note you do not have to clone in order to run common tasks but if you'd like to make changes to the pipeline you can clone it to test out those changes.
 
 ```{bash}
-conda create -p ~/conda-envs/myproj --clone /stor/work/sedio/conda_envs/<ENV_NAME>
+conda create -p ~/conda-envs/myproj --clone /stor/work/Sedio/conda_envs/<ENV_NAME>
 conda activate ~/conda-envs/myproj
 mamba install <extra-packages>
 ```
@@ -447,7 +447,7 @@ mamba install <extra-packages>
 
 ##### Activate an env by path (always works)
 ```{bash}
-conda activate /stor/work/sedio/conda_envs/<ENV_NAME>
+conda activate /stor/work/Sedio/conda_envs/<ENV_NAME>
 ```
 
 ##### Create a personal env in Home
