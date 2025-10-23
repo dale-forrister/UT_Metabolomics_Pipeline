@@ -37,7 +37,7 @@ rclone lsd UT_Box:
 
 This should list all of the folders you have access to...
 
-*** NOTE if rclone is not configured follow these steps - [configure rclone](UT_Metabolomics_Pipeline/docs/overview_of_resources.md#rclone)
+*** NOTE if rclone is not configured follow these steps - [configure rclone](https://github.com/dale-forrister/UT_Metabolomics_Pipeline/blob/main/docs/overview_of_resources.md#configuring-rclone-with-ut_box-one-time)
 
 
 ## Downloading from Core and Converting (with or without UV)
