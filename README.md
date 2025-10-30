@@ -19,6 +19,8 @@
 
 1.  Request a POD account [here](https://rctf-account-request.icmb.utexas.edu/). You can also learn more about POD resources [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976153/POD+Accounts).
 
+Note: Access to this website is only available from the UT campus network (excluding Dell Medical School) or using the <a href="[https://rctf-account-request.icmb.utexas.edu/](https://utexas.atlassian.net/wiki/spaces/RCTFusers/pages/31976900/FAQ#FAQ-HowtosetuptheUTVPNservice">UT VPN service</a>.
+
 2.  In the "Affiliation" field, select "Sedio_Brian". Please note that it may take 1-2 days for your account to be activated for SSH access to the computing clusters.
 
 This will get you access to the rental pods which have large CPU's, storage and memory. It is also where we have preinstall key softwore for the metabolomics pipeline.
