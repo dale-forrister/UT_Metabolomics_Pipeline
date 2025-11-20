@@ -17,6 +17,13 @@
   - [Part 4: Post Processing W/ Sirius and Dreams](docs/metabolomics_pipeline_part_4.md)
 
 ## Getting Started Checklist:
+#### 1) Create Your POD Account
+#### 2) Learn how to connect to the server
+#### 3) Download and Install Conda
+#### 4) Install rclone
+#### 5) 
+
+
 
 ### 1) Create Your POD Account
 
@@ -34,7 +41,7 @@
 
    If you need access to GPUs for machine learning pipelines please reach out to Dale Forrister, we        have limited access to this but only for tasks that actually benefit from GPUs.
    
-### 2) Learn how to connect to the server
+
 
 ### Connecting to CPU Rental Pods:
 
