@@ -15,21 +15,26 @@
   - [Part 2: Moving Raw data files from the Metabolomics Core and Converting with MSConvert](docs/metabolomics_pipeline_part_2.md)
   - [Part 3: Processing Raw data with MZmine](docs/metabolomics_pipeline_part_3.md)
   - [Part 4: Post Processing W/ Sirius and Dreams](docs/metabolomics_pipeline_part_4.md)
-### Create Your POD Account
 
-1.  Request a POD account [here](https://rctf-account-request.icmb.utexas.edu/). You can also learn more about POD resources [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976153/POD+Accounts).
+## Getting Started Checklist:
 
-Note: Access to this website is only available from the UT campus network (excluding Dell Medical School) or using the [UT VPN service](https://utexas.atlassian.net/wiki/spaces/RCTFusers/pages/31976900/FAQ#FAQ-HowtosetuptheUTVPNservice).
+### 1) Create Your POD Account
 
-2.  In the "Affiliation" field, select "Sedio_Brian". Please note that it may take 1-2 days for your account to be activated for SSH access to the computing clusters.
+    1.  Request a POD account [here](https://rctf-account-request.icmb.utexas.edu/). You can also learn     more about POD resources [here] (https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976153/POD+Accounts).
 
-This will get you access to the rental pods which have large CPU's, storage and memory. It is also where we have preinstall key softwore for the metabolomics pipeline.
+    Note: Access to this website is only available from the UT campus network (excluding Dell Medical       School) or using the [UT VPN service](https://utexas.atlassian.net/wiki/spaces/RCTFusers/pages/31976900/FAQ#FAQ-HowtosetuptheUTVPNservice).
+
+    2.  In the "Affiliation" field, select "Sedio_Brian". Please note that it may take 1-2 days for         your account to be activated for SSH access to the computing clusters.
+
+    This will get you access to the rental pods which have large CPU's, storage and memory. It is also      where we have preinstall key softwore for the metabolomics pipeline.
 
     1.  `rentcomp01.ccbb.utexas.edu` (CPU: 72 threads, Memory: 754G)
     2.  `rentcomp02.ccbb.utexas.edu` (CPU: 72 threads, Memory: 251G)
     3.  `rentcomp03.ccbb.utexas.edu` (CPU: 112 threads, Memory: 754G)
 
-If you need access to GPUs for machine learning pipelines please reach out to Dale Forrister, we have limited access to this but only for tasks that actually benefit from GPUs.
+   If you need access to GPUs for machine learning pipelines please reach out to Dale Forrister, we        have limited access to this but only for tasks that actually benefit from GPUs.
+   
+### 2) Learn how to connect to the server
 
 ### Connecting to CPU Rental Pods:
 
