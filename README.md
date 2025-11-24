@@ -152,7 +152,9 @@ Once the extension is installed, a new "Remote Explorer" icon will appear in the
 5.  Once the connection is successful, you will see your server's address in the green status bar at the bottom-left corner of the VS Code window. This indicates that you are now working on the remote server.
 
 6.  **How to Add an SSH Key to Your Remote Server**: 
-If you prefer passwordless login, you can configure an SSH key and add it to your remote server. (You can learn more about passwordless access [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976509/POD+Resources+and+Access).)
+If you prefer passwordless login, you can configure an SSH key and add it to your remote server. (You can learn more about passwordless access [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976509/POD+Resources+and+Access).) 
+    * ***With an ssh key on your local computer, you can access POD from off campus without using a VPN.***
+  
     ```bash
     # 1. Generate an SSH key pair on your local machine
     # A. Open a terminal on your computer and run:
