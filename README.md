@@ -3,18 +3,24 @@
 
 
 ## Table of Contents
-- [Creating an Account](#create-your-pod-account)
-- [Connecting to Pods](#connecting-to-cpu-rental-pods)
-  - [Connecting to a Remote Server with Ondemand](#1-connecting-to-a-remote-server-through-the-browser-using-ondemand)
-  - [Connecting to a Remote Server with VS Code](#2-connecting-to-a-remote-server-with-vs-code)
-- [Overview of Resources](docs/overview_of_resources.md)
-  - Overview of POD Diskspace and Storage
-  - Notes on Important Group Folders
-- Instructions for specifc parts of the metabolomics pipeline
-  - [Part 1: Sample Metadata and Setting up a UPLC Run](docs/metabolomics_pipeline_part_1.md)
-  - [Part 2: Moving Raw data files from the Metabolomics Core and Converting with MSConvert](docs/metabolomics_pipeline_part_2.md)
-  - [Part 3: Processing Raw data with MZmine](docs/metabolomics_pipeline_part_3.md)
-  - [Part 4: Post Processing W/ Sirius and Dreams](docs/metabolomics_pipeline_part_4.md)
+- [ Sedio Lab Group Metabolomics Pipeline ](#-sedio-lab-group-metabolomics-pipeline-)
+  - [ Using the UT Austin Biomedical Research Computing Facility (BRCF) - aka Pods ](#-using-the-ut-austin-biomedical-research-computing-facility-brcf---aka-pods-)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started Checklist:](#getting-started-checklist)
+      - [1) Create Your POD Account](#1-create-your-pod-account)
+      - [2) Learn how to connect to the server](#2-learn-how-to-connect-to-the-server)
+      - [3) Download and Install Conda](#3-download-and-install-conda)
+      - [4) Install rclone](#4-install-rclone)
+      - [5)](#5)
+    - [1) Create Your POD Account](#1-create-your-pod-account-1)
+    - [Connecting to CPU Rental Pods:](#connecting-to-cpu-rental-pods)
+  - [1. Connecting to a Remote Server through the browser using ondemand](#1-connecting-to-a-remote-server-through-the-browser-using-ondemand)
+      - [2. Connecting to a Remote Server with VS Code](#2-connecting-to-a-remote-server-with-vs-code)
+      - [Prerequisites](#prerequisites)
+      - [Step 1: Install the "Remote - SSH" Extension](#step-1-install-the-remote---ssh-extension)
+      - [Step 2: Connect to the Remote Server](#step-2-connect-to-the-remote-server)
+      - [Step 3: Authenticate and Connect](#step-3-authenticate-and-connect)
+      - [Step 4: Open a Folder on the Remote Server](#step-4-open-a-folder-on-the-remote-server)
 
 ## Getting Started Checklist:
 #### 1) Create Your POD Account
@@ -114,9 +120,9 @@ Once the extension is installed, a new "Remote Explorer" icon will appear in the
 
 3.  Click the **+** (**Add New**) icon to add a new SSH connection.
 
-  *** Make sure you use the POD Specific Password. You can verify and change your password POD account [here](https://rctf-account-request.icmb.utexas.edu/).
-
-*** it may ask about the platform of the remote host - the pod is linux 
+  **Make sure you use the POD Specific Password. You can verify and change your password POD account [here](https://rctf-account-request.icmb.utexas.edu/).**
+  
+  it may ask about the platform of the remote host - the pod is linux 
 
 4.  Enter the SSH command to connect to your server in the following format:
 
@@ -143,9 +149,31 @@ Once the extension is installed, a new "Remote Explorer" icon will appear in the
 
 4.  Next, you will be prompted for your password. Enter your POD account password and press **Enter**.
 
-      * **Note on SSH Keys:** If you have configured an SSH key for your server, you may not be prompted for a password. You can learn more about passwordless access [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976509/POD+Resources+and+Access).
-
 5.  Once the connection is successful, you will see your server's address in the green status bar at the bottom-left corner of the VS Code window. This indicates that you are now working on the remote server.
+
+6.  **How to Add an SSH Key to Your Remote Server**: 
+If you prefer passwordless login, you can configure an SSH key and add it to your remote server. (You can learn more about passwordless access [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976509/POD+Resources+and+Access).)
+    ```bash
+    # 1. Generate an SSH key pair on your local machine
+    # A. Open a terminal on your computer and run:
+    ssh-keygen -t rsa -b 4096
+
+    # Press Enter to accept the default file location, and optionally set a passphrase.
+    # This will create two files in ~/.ssh/:
+    # •	id_rsa — your private key (keep this safe)
+    # •	id_rsa.pub — your public key (this is what you upload)
+
+    # 2. Copy your public key to the remote server
+    # Use the following command to upload the key:
+    ssh-copy-id your_username@your_server_address
+    # For example
+    ssh-copy-id bf22265@rentcomp01.ccbb.utexas.edu
+    # Then input your passward for this remote server (rentcomp01.ccbb.utexas.edu in this example)
+    
+    # 3. Test the connection
+    # Now you can log in without entering a password:
+    ssh bf22265@rentcomp01.ccbb.utexas.edu
+    ```
 
 #### Step 4: Open a Folder on the Remote Server
 
