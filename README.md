@@ -1,194 +1,53 @@
-# <div align="center"> Sedio Lab Group Metabolomics Pipeline </div>
-## <div align="center"> Using the UT Austin Biomedical Research Computing Facility (BRCF) - aka Pods </div>
+# Sedio Lab Group Metabolomics Pipeline
+## UT Austin BRCF POD workflow
 
+This repository is the entry point for running the Sedio Lab metabolomics pipeline on the UT POD cluster.
 
-## Table of Contents
-- [ Sedio Lab Group Metabolomics Pipeline ](#-sedio-lab-group-metabolomics-pipeline-)
-  - [ Using the UT Austin Biomedical Research Computing Facility (BRCF) - aka Pods ](#-using-the-ut-austin-biomedical-research-computing-facility-brcf---aka-pods-)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started Checklist:](#getting-started-checklist)
-      - [1) Create Your POD Account](#1-create-your-pod-account)
-      - [2) Learn how to connect to the server](#2-learn-how-to-connect-to-the-server)
-      - [3) Download and Install Conda](#3-download-and-install-conda)
-      - [4) Install rclone](#4-install-rclone)
-      - [5)](#5)
-    - [1) Create Your POD Account](#1-create-your-pod-account-1)
-    - [Connecting to CPU Rental Pods:](#connecting-to-cpu-rental-pods)
-  - [1. Connecting to a Remote Server through the browser using ondemand](#1-connecting-to-a-remote-server-through-the-browser-using-ondemand)
-      - [2. Connecting to a Remote Server with VS Code](#2-connecting-to-a-remote-server-with-vs-code)
-      - [Prerequisites](#prerequisites)
-      - [Step 1: Install the "Remote - SSH" Extension](#step-1-install-the-remote---ssh-extension)
-      - [Step 2: Connect to the Remote Server](#step-2-connect-to-the-remote-server)
-      - [Step 3: Authenticate and Connect](#step-3-authenticate-and-connect)
-      - [Step 4: Open a Folder on the Remote Server](#step-4-open-a-folder-on-the-remote-server)
+## Start Here
+- New users: [Getting Started (account + login + first connection)](docs/getting_started.md)
+- Full system/help docs: [Overview of Resources](docs/overview_of_resources.md)
+- Pipeline steps: [Main Processing Workflow](#main-processing-workflow)
 
-## Getting Started Checklist:
-#### 1) Create Your POD Account
-#### 2) Learn how to connect to the server
-#### 3) Download and Install Conda
-#### 4) Install rclone
-#### 5) 
+## Basic POD Usage
+1. Connect to a POD node (OnDemand in browser or SSH/VS Code).
+2. Work from the correct storage location (`/stor/work/Sedio` for persistent project data, `/stor/scratch/Sedio` for temporary high-speed work).
+3. Activate the shared environment for pipeline tools.
+4. Run the pipeline in order (convert raw data, process in MZmine, then optional post-processing).
 
+```bash
+# Example shared environment activation
+conda activate /stor/work/Sedio/conda_envs/mzmine_processing
+```
 
+## Main Processing Workflow
+1. [Part 1: Sample metadata and UPLC run setup](docs/metabolomics_pipeline_part_1.md)
+2. [Part 2: Move RAW data and convert with MSConvert](docs/metabolomics_pipeline_part_2.md)
+3. [Part 3: Process with MZmine](docs/metabolomics_pipeline_part_3.md)
+4. [Part 4: Post-processing with Sirius and dreaMS](docs/metabolomics_pipeline_part_4.md)
 
-### 1) Create Your POD Account
-
-    1.  Request a POD account [here](https://rctf-account-request.icmb.utexas.edu/). You can also learn     more about POD resources [here] (https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976153/POD+Accounts).
-
-    Note: Access to this website is only available from the UT campus network (excluding Dell Medical       School) or using the [UT VPN service](https://utexas.atlassian.net/wiki/spaces/RCTFusers/pages/31976900/FAQ#FAQ-HowtosetuptheUTVPNservice).
-
-    2.  In the "Affiliation" field, select "Sedio_Brian". Please note that it may take 1-2 days for         your account to be activated for SSH access to the computing clusters.
-
-    This will get you access to the rental pods which have large CPU's, storage and memory. It is also      where we have preinstall key softwore for the metabolomics pipeline.
-
-    1.  `rentcomp01.ccbb.utexas.edu` (CPU: 72 threads, Memory: 754G)
-    2.  `rentcomp02.ccbb.utexas.edu` (CPU: 72 threads, Memory: 251G)
-    3.  `rentcomp03.ccbb.utexas.edu` (CPU: 112 threads, Memory: 754G)
-
-   If you need access to GPUs for machine learning pipelines please reach out to Dale Forrister, we        have limited access to this but only for tasks that actually benefit from GPUs.
-   
-
-
-### Connecting to CPU Rental Pods:
-
-## 1. Connecting to a Remote Server through the browser using ondemand
-
-This is by far the easiest way to connect. It is also the best way to run R on the server. I generally prefer vscode for python rather than Jupyterhub but you can explore both options.
-
-Follow this link depending on which compute node you are are targeting.
-
- [https://rentcomp1.ccbb.utexas.edu/](https://rentcomp01.ccbb.utexas.edu/)
- 
- [https://rentcomp2.ccbb.utexas.edu/](https://rentcomp02.ccbb.utexas.edu/)
-
- [https://rentcomp3.ccbb.utexas.edu/](https://rentcomp03.ccbb.utexas.edu/)
-
-  You can choose between:
-  RStudio
-  Jupyterhub
-
-  When you are coding here you will be running on the cluster through web browser
+## Core Links
+- [Getting Started (login/account)](docs/getting_started.md)
+- [Overview of POD storage, conda, and rclone](docs/overview_of_resources.md)
+- [Practical Computing for Biologists (PDF)](docs/Practical%20Computing%20for%20Biologists.pdf)
+- [POD resources and access (UT wiki)](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976509/POD+Resources+and+Access)
 
 <details>
-  <summary>N.B. make sure to pick your pod account password.</summary>
-  Especially if you are using a password manager, make sure you use the POD Specific Password. 
-  This will likely be the password associated to a URL that includes 'icmb.utexas.edu'.
-  You can verify and change your password POD account <a href="https://rctf-account-request.icmb.utexas.edu/">here</a>.
+  <summary>Quick Login Endpoints (optional)</summary>
+
+- https://rentcomp01.ccbb.utexas.edu/
+- https://rentcomp02.ccbb.utexas.edu/
+- https://rentcomp03.ccbb.utexas.edu/
+
 </details>
 
-#### 2. Connecting to a Remote Server with VS Code
+<details>
+  <summary>Compute Nodes</summary>
 
-Visual Studio Code, a powerful and versatile code editor, can be transformed into a robust remote development environment. By connecting to a remote server, you can edit files and run commands as if you were working directly on that machine. This tutorial will guide you through connecting to a server using the popular "Remote - SSH" extension.
+- `rentcomp01.ccbb.utexas.edu` (CPU: 72 threads, Memory: 754G)
+- `rentcomp02.ccbb.utexas.edu` (CPU: 72 threads, Memory: 251G)
+- `rentcomp03.ccbb.utexas.edu` (CPU: 112 threads, Memory: 754G)
 
-#### Prerequisites
-
-Before you begin, make sure you have installed Visual Studio Code (VS Code). You can find installation tutorials here:
-
-  * **Windows**: [How to install Visual Studio Code on Windows 10/11](https://www.youtube.com/watch?v=2Gz-uuQWxu4)
-  * **macOS**: [How to Install Visual Studio Code on Mac](https://www.youtube.com/watch?v=w0xBQHKjoGo)
-
-It is also recommended that you read the first two parts of ["Practical Computing for Biologists" by Haddock and Dunn](<docs/Practical Computing for Biologists.pdf>) to learn the basics of Linux and the Shell.
-
-
-3.  We currently have three nodes available on POD (server addresses listed below):
-
-4.  These nodes are shared with other labs, so please be mindful of your resource usage to avoid overloading the system. The POD manager will restrict processes that use excessive resources. You may receive an email notification like this:
-
-    ```
-    The process: [PID: 2136120] /stor/home/bf22265/micromamba/envs/dreams/bin/python
-    owned by bf22265 (UID: 601015) has been modified:
-
-    This process was reniced for excess CPU time usage
-    The current nice value of this process is 19
-    This process has consumed 204 minutes of CPU time.
-    ```
-
-#### Step 1: Install the "Remote - SSH" Extension
-
-1.  Open **VS Code**.
-2.  Navigate to the **Extensions** view by clicking the square icon in the sidebar on the left, or by pressing `Ctrl+Shift+X` (Windows) or `Cmd+Shift+X` (macOS).
-3.  In the search bar, type `Remote - SSH`.
-4.  Locate the extension provided by **Microsoft** and click the **Install** button.
-
-#### Step 2: Connect to the Remote Server
-
-Once the extension is installed, a new "Remote Explorer" icon will appear in the activity bar.
-
-1.  Click the new **Remote Explorer** icon in the activity bar.
-
-2.  Ensure that `SSH Targets` is selected from the dropdown menu at the top of the Remote Explorer view.
-
-3.  Click the **+** (**Add New**) icon to add a new SSH connection.
-
-  **Make sure you use the POD Specific Password. You can verify and change your password POD account [here](https://rctf-account-request.icmb.utexas.edu/).**
-  
-  it may ask about the platform of the remote host - the pod is linux 
-
-4.  Enter the SSH command to connect to your server in the following format:
-
-    ```bash
-    # Your username is often your EID
-    ssh your_username@your_server_address
-
-    # Here is an example:
-    ssh bf22265@rentcomp01.ccbb.utexas.edu
-
-    # You can change the server address to log in to a different node
-    ssh bf22265@rentcomp02.ccbb.utexas.edu
-    ```
-
-5.  You will be prompted to select an SSH configuration file. Choose the default location offered, which is typically in the `.ssh` folder within your user's home directory.
-
-#### Step 3: Authenticate and Connect
-
-1.  After adding the host, it will appear in your list of SSH Targets in the Remote Explorer.
-
-2.  Hover over the host you just added and click the **Connect to Host in New Window** icon (it looks like a folder with a plus sign).
-
-3.  A new VS Code window will open. If this is your first time connecting, you may be prompted to confirm the server's fingerprint. Type `yes` and press **Enter**.
-
-4.  Next, you will be prompted for your password. Enter your POD account password and press **Enter**.
-
-5.  Once the connection is successful, you will see your server's address in the green status bar at the bottom-left corner of the VS Code window. This indicates that you are now working on the remote server.
-
-6.  **How to Add an SSH Key to Your Remote Server**: 
-If you prefer passwordless login, you can configure an SSH key and add it to your remote server. (You can learn more about passwordless access [here](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers/pages/31976509/POD+Resources+and+Access).) 
-    * ***With an ssh key on your local computer, you can access POD from off campus without using a VPN.***
-  
-    ```bash
-    # 1. Generate an SSH key pair on your local machine
-    # A. Open a terminal on your computer and run:
-    ssh-keygen -t rsa -b 4096
-
-    # Press Enter to accept the default file location, and optionally set a passphrase.
-    # This will create two files in ~/.ssh/:
-    # •	id_rsa — your private key (keep this safe)
-    # •	id_rsa.pub — your public key (this is what you upload)
-
-    # 2. Copy your public key to the remote server
-    # Use the following command to upload the key:
-    ssh-copy-id your_username@your_server_address
-    # For example
-    ssh-copy-id bf22265@rentcomp01.ccbb.utexas.edu
-    # Then input your passward for this remote server (rentcomp01.ccbb.utexas.edu in this example)
-    
-    # 3. Test the connection
-    # Now you can log in without entering a password:
-    ssh bf22265@rentcomp01.ccbb.utexas.edu
-    ```
-
-#### Step 4: Open a Folder on the Remote Server
-
-Now that you are connected, you can open a project folder from the remote server.
-
-1.  Click **Open Folder** in the Explorer sidebar.
-2.  A dialog will appear showing the file system of your remote server.
-3.  Navigate to the directory you want to work in, select it, and click **OK**.
-
-The folder's contents will appear in the VS Code Explorer. You can now create, edit, and delete files on your remote server directly from VS Code. The integrated terminal (`Ctrl+Shift+~`) will also now open a terminal session on your remote server.
-
-Congratulations! You have successfully connected to a remote server with VS Code. You can now enjoy a seamless remote development experience with the full power of your favorite editor.
-
+</details>
 
 
 
