@@ -345,7 +345,7 @@ Required inputs:
 
 --output: path to where you would like output files to be written
 
-formulas: # need to expand this section. In the meantime run
+formulas: # need to expand this section. In the meantime run. I'm unsure about the currently selected options.
 ```{bash}
 sirius formulas --help
 ```
@@ -358,7 +358,7 @@ sirius \
     --project ~/working/G067/output/sirius_output/g067_dr_project.sirius \
     --cores 24 \
     spectra-search \
-    formulas -p orbitrap -I [M+H]+ -i [M+Na]+,[M+K]+ --ppm-max 5 --ppm-max-ms2 10 \ #unsure on these options
+    formulas -p orbitrap -I [M+H]+ -i [M+Na]+,[M+K]+ --ppm-max 5 --ppm-max-ms2 10 \
     zodiac \
     fingerprint \
     canopus \
