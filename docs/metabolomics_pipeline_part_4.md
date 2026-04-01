@@ -356,13 +356,13 @@ Start SIRIUS run
 sirius \
     --input ~/working/G067/output/g067_dr_sirius.mgf \
     --project ~/working/G067/output/sirius_output/g067_dr_project.sirius \
-    --cores 24 \ 
+    --cores 24 \
     spectra-search \
-    formulas -p orbitrap -I [M+H]+ -i [M+Na]+,[M+K]+ --ppm-max 5 --ppm-max-ms2 10 \ 
+    formulas -p orbitrap -I [M+H]+ -i [M+Na]+,[M+K]+ --ppm-max 5 --ppm-max-ms2 10 \
     zodiac \
     fingerprint \
     canopus \
-    structures --db pubchem,metacyc,bio,chebi,gnps,hmdb,hsdb,kegg,knapsack,lotus,lipidmaps,maconda,mesh,mimedb,norman,plantcyc,pubchemannotationbio,pubchemannotationdrug,pubchemannotationfood,pubchemannotationsafetyandtoxic,pubmed,supernatural,teromol,ymdb \ 
+    structures --db pubchem,metacyc,bio,chebi,gnps,hmdb,hsdb,kegg,knapsack,lotus,lipidmaps,maconda,mesh,mimedb,norman,plantcyc,pubchemannotationbio,pubchemannotationdrug,pubchemannotationfood,pubchemannotationsafetyandtoxic,pubmed,supernatural,teromol,ymdb \
     denovo-structures \
     write-summaries --top-k-summary 10 --output ~/working/G067/output/sirius_output/
 ```
