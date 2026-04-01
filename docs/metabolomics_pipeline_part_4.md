@@ -307,6 +307,10 @@ If reconnecting to a screen session is not working try:
 ```{bash}
 screen -xr 
 ```
+To terminate a screen session when you are finished use "exit" while attached to the screen
+```{bash}
+exiit
+```
 
 ## Run SIRIUS
 
