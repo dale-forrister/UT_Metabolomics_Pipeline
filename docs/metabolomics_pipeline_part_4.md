@@ -362,7 +362,7 @@ sirius \
     zodiac \
     fingerprint \
     canopus \
-    structures --db pubchem,metacyc,bio,chebi,gnps,hmdb,hsdb,kegg,knapsack,lotus,lipidmaps,maconda,mesh,mimedb,norman,plantcyc,pubchemannotationbio,        pubchemannotationdrug,pubchemannotationfood,pubchemannotationsafetyandtoxic,pubmed,supernatural,teromol,ymdb \ 
+    structures --db pubchem,metacyc,bio,chebi,gnps,hmdb,hsdb,kegg,knapsack,lotus,lipidmaps,maconda,mesh,mimedb,norman,plantcyc,pubchemannotationbio,pubchemannotationdrug,pubchemannotationfood,pubchemannotationsafetyandtoxic,pubmed,supernatural,teromol,ymdb \ 
     denovo-structures \
     write-summaries --top-k-summary 10 --output ~/working/G067/output/sirius_output/
 ```
