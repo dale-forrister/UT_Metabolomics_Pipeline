@@ -309,7 +309,7 @@ screen -xr
 ```
 To terminate a screen session when you are finished use "exit" while attached to the screen
 ```{bash}
-exiit
+exit
 ```
 
 ## Run SIRIUS
