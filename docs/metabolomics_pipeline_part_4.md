@@ -284,30 +284,89 @@ msdata_hq = MSData.load(hq_pth)
 print(f"Number of high-quality spectra: {len(msdata_hq)}")
 ```
 
-## Run Sirius
 
-Activate the sirius conda environment 
+## Using screen
+Use screen for longer jobs such as sirius runs. This will allow you to disconnect from the server while the job is still running. 
+
+
+Create a new named screen
+```{bash}
+screen -S sirius_test_run_screen_03-19-26
+```
+
+While commands are running in the screen you can detach from it with "Ctrl + A" and then "D"
+
+Reattach to the named screen with:
+```{bash}
+screen -r sirius_test_run_screen_03-19-26
+```
+
+While in a screen session you can enter "copy mode" with "Ctrl + A", and then "Esc". This willn allow you to scroll up if needed
+
+If reconnecting to a screen session is not working try: 
+```{bash}
+screen -xr 
+```
+To terminate a screen session when you are finished use "exit" while attached to the screen
+```{bash}
+exit
+```
+
+## Run SIRIUS
+
+Activate the SIRIUS conda environment 
 
 ```{bash}
-conda activate sirius622
+conda activate /stor/work/Sedio/conda_envs/sirius622
 ```
 ```{bash}
 sirius -h 
 ```
+Login to SIRIUS 
 
-#This is a test run that works but we need to do some testing to come up with the full set of parameters to use...
+```{bash}
+sirius login -u example@gmail.com -p
+```
+
+SIRIUS login status/account can be checked with:
+
+```{bash}
+sirius login --show 
+```
+
+
+
+Run SIRIUS. These are the parameters that the Invasive Species Lab used, but we are still refining out parameters 
+Required inputs:
+
+--input: path to the .mgf file you will be using
+
+--project: path to the .sirius project file. This file will be created if it does not exist already
+
+--output: path to where you would like output files to be written
+
+formulas: # need to expand this section. In the meantime run. I'm unsure about the currently selected options.
+```{bash}
+sirius formulas --help
+```
+
+Start SIRIUS run
+
 ```{bash}
 sirius \
-  -i /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/demo_carya_10k_20220822_sirius.mgf \
-  --project /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/sirius_project \
-  --cores 12 \ # important or it will gobble up all the cores
-  formulas -p orbitrap -I [M+H]+ --ppm-max 5 --ppm-max-ms2 10
+    --input ~/working/G067/output/g067_dr_sirius.mgf \
+    --project ~/working/G067/output/sirius_output/g067_dr_project.sirius \
+    --cores 24 \
+    spectra-search \
+    formulas -p orbitrap -I [M+H]+ -i [M+Na]+,[M+K]+ --ppm-max 5 --ppm-max-ms2 10 \
+    zodiac \
+    fingerprint \
+    canopus \
+    structures --db pubchem,metacyc,bio,chebi,gnps,hmdb,hsdb,kegg,knapsack,lotus,lipidmaps,maconda,mesh,mimedb,norman,plantcyc,pubchemannotationbio,pubchemannotationdrug,pubchemannotationfood,pubchemannotationsafetyandtoxic,pubmed,supernatural,teromol,ymdb \
+    denovo-structures \
+    write-summaries --top-k-summary 10 --output ~/working/G067/output/sirius_output/
 ```
 
-#write the summaries with the top 10 
 
-```{bash}
-sirius -o /stor/work/Sedio/UPLCMS_Data/POD_Pipeline_Demo_Data/sirius_project summaries --top-k-summary 10 --format tsv
-```
 
 
