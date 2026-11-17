@@ -1,6 +1,8 @@
 # UT Metabolomics Pipeline
 
-This repository is how the **[Sedio Lab](https://integrativebio.utexas.edu/directory/brian-sedio)**
+**Author: [Dale Forrister](https://dale-forrister.github.io/)** · [website](https://dale-forrister.github.io/) · [GitHub](https://github.com/dale-forrister) — postdoctoral researcher, Sedio Lab, UT Austin
+
+This repository is how the **[Sedio Lab](https://briansedio.weebly.com/)**
 (UT Austin) processes untargeted LC-MS/MS metabolomics data. You start with a sheet listing your
 samples; the pipeline converts the raw instrument files, detects and groups features across all
 samples, builds molecular networks, and annotates the features with **SIRIUS** (and, optionally,
@@ -10,9 +12,6 @@ It is a set of **documented steps you run yourself** — not a black box. Each s
 and the [`docs/`](docs/) walkthroughs explain both *how* to run it and *why* the parameters are set
 the way they are. New here? Start with **[Getting Started](docs/getting_started.md)**, then follow
 Parts 1→5 in order.
-
-**Author:** Dale Forrister — postdoctoral researcher, Sedio Lab, UT Austin ·
-[GitHub @dale-forrister](https://github.com/dale-forrister)
 
 ### Built on two UT Austin core facilities
 
