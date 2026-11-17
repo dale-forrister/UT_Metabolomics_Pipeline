@@ -26,41 +26,45 @@ Parts 1→5 in order.
 ## How it works
 
 ```mermaid
-flowchart TB
-    SAMPLE["🧪 Sample submitted to the<br/>Biological Mass Spec Facility<br/>(Thermo Orbitrap UPLC-MS/MS)"]
+flowchart LR
+    SAMPLE["🧪 Sample submitted to<br/>UT Biological Mass Spec Facility<br/>(Thermo Orbitrap UPLC-MS/MS)"]
     SAMPLE --> RAW["📄 RAW data"]
     SAMPLE --> INJ[("🗄️ UPLC_Injections<br/>metadata (SQL database)")]
+    TPL["⚙️ mzbatch template<br/>(Sedio Lab gradient + MS settings)"]
+    BOX[("☁️ UT_Box cloud storage<br/>raw + converted")]
 
-    RAW --> AUTO["🔄 MS_Autoconverter<br/>(nightly cron)"]
-    INJ <-->|"nightly run · retries errors"| AUTO
-    AUTO --> MZML
+    subgraph POD ["🖥️ BRCF Rental Pod — every step below runs here"]
+        direction LR
+        AUTO["🔄 MS_Autoconverter<br/>(nightly cron)"]
+        MZML["📄 Converted mzML<br/>(stored on the pod)"]
+        MZ["🧬 MZmine processing"]
+        QT["📋 quant_table"]
+        MN["🕸️ molecular_networking"]
+        LIB["🔖 local library<br/>annotations"]
+        SX["📄 SIRIUS export"]
+        SIR["🔬 SIRIUS"]
+        ECO["📦 eCOMET (R)"]
 
-    subgraph PODENV ["🖥️ BRCF Rental Pod"]
-        MZML["📄 Converted mzML"]
-        POD[("💾 POD storage")]
-        MZML --> POD
+        AUTO --> MZML --> MZ
+        MZ --> QT
+        MZ --> MN
+        MZ --> LIB
+        MZ --> SX --> SIR
+        QT --> ECO
+        MN --> ECO
+        LIB --> ECO
+        SIR --> ECO
     end
 
-    BOX[("☁️ UT_Box cloud storage<br/>raw + converted")]
-    POD <-. "backup: sync ↔ retrieve" .-> BOX
+    RAW --> AUTO
+    INJ <-->|"nightly · retries errors"| AUTO
+    TPL --> MZ
+    MZML <-. "backup: sync ↔ retrieve" .-> BOX
     RAW -. backup .-> BOX
-
-    TPL["⚙️ mzbatch template<br/>optimized for Sedio Lab<br/>gradient + MS settings"] --> MZ
-    MZML --> MZ["🧬 MZmine processing"]
-    MZ --> QT["📋 quant_table"]
-    MZ --> MN["🕸️ molecular_networking"]
-    MZ --> GX["GNPS export"]
-    MZ --> SX["SIRIUS export"]
-    MZ --> LIB["🔖 local library<br/>annotations"]
-
-    SX --> SIRIUS["🔬 SIRIUS<br/>formula · structure ·<br/>fingerprint · CANOPUS"]
-    GX --> GNPS["🌐 GNPS / FBMN"]
-
-    QT --> ECO["📦 eCOMET<br/>(R package)"]
-    MN --> ECO
-    LIB --> ECO
-    SIRIUS --> ECO
+    MZ --> GX["📄 GNPS export"] --> GNPS["🌐 GNPS / FBMN"]
     ECO --> FINAL["📊 Statistical analysis,<br/>plots & manuscripts"]
+
+    style POD fill:#dbe7f5,stroke:#3b6fb5,stroke-width:2px
 ```
 
 > **Two different MGF exports** come out of MZmine and feed different tools — this trips people up:
