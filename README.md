@@ -1,44 +1,66 @@
 # UT Metabolomics Pipeline
 
-This repository is how the **Sedio Lab** processes untargeted LC-MS/MS metabolomics data on the
-UT Austin **POD** cluster. You start with a sheet listing your samples; the pipeline converts the
-raw instrument files, detects and groups features across all samples, builds molecular networks,
-and annotates the features with **SIRIUS** (and, optionally, **DreaMS** spectral embeddings).
+This repository is how the **[Sedio Lab](https://integrativebio.utexas.edu/directory/brian-sedio)**
+(UT Austin) processes untargeted LC-MS/MS metabolomics data. You start with a sheet listing your
+samples; the pipeline converts the raw instrument files, detects and groups features across all
+samples, builds molecular networks, and annotates the features with **SIRIUS** (and, optionally,
+**DreaMS** spectral embeddings).
 
 It is a set of **documented steps you run yourself** — not a black box. Each step is one command,
 and the [`docs/`](docs/) walkthroughs explain both *how* to run it and *why* the parameters are set
-the way they are. If you are new, start with **[Getting Started](docs/getting_started.md)** and then
-follow Parts 1→5 in order.
+the way they are. New here? Start with **[Getting Started](docs/getting_started.md)**, then follow
+Parts 1→5 in order.
+
+**Author:** Dale Forrister — postdoctoral researcher, Sedio Lab, UT Austin ·
+[GitHub @dale-forrister](https://github.com/dale-forrister)
+
+### Built on two UT Austin core facilities
+
+- **[Biological Mass Spectrometry Facility](https://research.utexas.edu/cbrs/facilities/)**
+  (UT CBRS; RRID:SCR_021728) — samples are run here on a high-resolution **Thermo Orbitrap**
+  UPLC-MS/MS. The pipeline is **optimized for Orbitrap data**: high-resolution centroided spectra,
+  and SIRIUS runs with its `orbitrap` instrument profile.
+- **[Biomedical Research Computing Facility (BRCF)](https://research.utexas.edu/cbrs/facilities/brcf)**
+  — all processing runs on its shared "POD" cluster
+  ([users wiki](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers)).
 
 ## How it works
 
 ```mermaid
-flowchart LR
-    M["Sample sheet<br/>(.tsv/.csv) + RAW files"] --> C
+flowchart TB
+    SAMPLE["🧪 Sample submitted to the<br/>Biological Mass Spec Facility<br/>(Thermo Orbitrap UPLC-MS/MS)"]
+    SAMPLE --> RAW["📄 RAW data"]
+    SAMPLE --> INJ[("🗄️ UPLC_Injections<br/>metadata (SQL database)")]
 
-    subgraph P2 ["Part 2 · MSConvert"]
-        C["RAW to mzML<br/>(MS-only or +UV)"]
-    end
-    subgraph P3 ["Part 3 · MZmine"]
-        F["feature detection, alignment,<br/>blank subtraction, correlation &<br/>ion-identity grouping, molecular<br/>networking (cosine, MS2Deepscore, DreaMS)"]
-    end
-    subgraph P45 ["Part 4-5 · annotation"]
-        S["SIRIUS<br/>formula, CSI:FingerID,<br/>structure, CANOPUS"]
-        D["DreaMS embeddings<br/>(optional)"]
-    end
+    RAW --> AUTO["🔄 MS_Autoconverter<br/>(nightly cron)"]
+    INJ <-->|"nightly run · retries errors"| AUTO
+    AUTO --> MZML["📄 Converted mzML"]
+    MZML --> POD[("💾 POD storage")]
+    RAW -. backup .-> BOX[("☁️ UT_Box<br/>raw + converted")]
+    MZML -. backup .-> BOX
 
-    C --> F
-    F -->|"SIRIUS .mgf<br/>(per-feature MS1+MS2)"| S
-    F -->|"GNPS .mgf<br/>(1 consensus spectrum/feature)"| D
-    F --> O1["feature table,<br/>compound groups,<br/>FBMN/IIMN networks"]
-    S --> O2["formula, structure,<br/>fingerprint & compound-class tables"]
-    D --> O3["per-feature embeddings"]
+    TPL["⚙️ mzbatch template<br/>optimized for Sedio Lab<br/>gradient + MS settings"] --> MZ
+    MZML --> MZ["🧬 MZmine processing"]
+    MZ --> QT["📋 quant_table"]
+    MZ --> MN["🕸️ molecular_networking"]
+    MZ --> GX["GNPS export"]
+    MZ --> SX["SIRIUS export"]
+    MZ --> LIB["🔖 local library<br/>annotations"]
+
+    SX --> SIRIUS["🔬 SIRIUS<br/>formula · structure ·<br/>fingerprint · CANOPUS"]
+    GX --> GNPS["🌐 GNPS / FBMN"]
+
+    QT --> ECO["📦 eCOMET<br/>(R package)"]
+    MN --> ECO
+    LIB --> ECO
+    SIRIUS --> ECO
+    ECO --> FINAL["📊 Statistical analysis,<br/>plots & manuscripts"]
 ```
 
 > **Two different MGF exports** come out of MZmine and feed different tools — this trips people up:
 > **SIRIUS** uses `*_sirius.mgf` (the *SIRIUS export*: the full per-feature MS1 isotope pattern + its
-> MS2 scans, so SIRIUS sees all the fragmentation data). **DreaMS** uses `*_iimn_gnps.mgf` (the
-> *GNPS export*: one merged consensus spectrum per feature). Both are optional downstream steps.
+> MS2 scans, so SIRIUS sees all the fragmentation data). The *GNPS export* `*_iimn_gnps.mgf` (one
+> merged consensus spectrum per feature) is what goes to **GNPS/FBMN** and to **DreaMS** embeddings.
 
 ## Pipeline at a glance
 
@@ -47,7 +69,7 @@ flowchart LR
 | 1. Metadata & setup | sample sheet (`.tsv`/`.csv`) + `check_metadata.py` | `code/mzmine_processing/check_metadata.py` | validated sample list |
 | 2. Convert RAW → mzML | **MSConvert** (ProteoWizard `pwiz` Docker) | `ms_auto_converter` (auto) / `msconvert-batch.py` (manual) | MS-only (or +UV) `.mzML` |
 | 3a. Build MZmine batch | batch updater (fills the template from your metadata) | `code/mzmine_processing/update_mzmine_batch.py` | run-ready `.mzbatch` |
-| 3b. Feature finding + networking | **MZmine 4.10.90** | `resources/mzbatch/` template | feature table, compound groups, GNPS & SIRIUS MGFs, FBMN/IIMN graphs |
+| 3b. Feature finding + networking | **MZmine 4.10.90** | `resources/mzbatch/` template | quant table, compound groups, GNPS & SIRIUS MGFs, FBMN/IIMN graphs |
 | 4. Structural annotation | **SIRIUS 6.5.4** (CSI:FingerID, CANOPUS) | `code/sirius_batch_processing/` | formula, structure, fingerprint, compound-class tables |
 | 4. Spectral embeddings (optional) | **DreaMS** (PyTorch) | see [Part 4](docs/metabolomics_pipeline_part_4.md) | per-feature embeddings |
 | 5. SIRIUS at scale | chunked, resumable runner | `code/sirius_batch_processing/` | the Part-4 tables, for large projects |
@@ -72,16 +94,16 @@ filename instead.)
 
 - **MSConvert / ms_auto_converter** — a cron job
   ([ms_auto_converter](https://github.com/dale-forrister/ms_auto_converter)) converts new instrument
-  files automatically and syncs them to Box. When you need to convert your own data, or the
-  auto-converter is down, run it manually from a CSV. Both paths, and the three conversion presets,
-  are documented in **[Part 2](docs/metabolomics_pipeline_part_2.md)**.
+  files automatically each night and syncs them to Box. When you need to convert your own data, or
+  the auto-converter is down, run it manually from a CSV. Both paths, and the three conversion
+  presets, are documented in **[Part 2](docs/metabolomics_pipeline_part_2.md)**.
 - **MZmine batch updater** (`update_mzmine_batch.py`) — you don't hand-edit MZmine batch files. The
   updater takes your metadata sheet and fills the sample list, blank-subtraction groups, and output
   names into a **batch template**, producing a run-ready `.mzbatch`.
 - **Default batch template** (`resources/mzbatch/`) — a versioned MZmine template whose parameters
-  are tuned for the **lab's standard extraction and UPLC-MS protocol**. It is the default, but you
-  can point the updater at an **alternate template** (`--mzbatch <your_template>`) for a different
-  method.
+  are tuned for the **lab's standard extraction and UPLC-MS protocol** (gradient + Orbitrap
+  settings). It is the default, but you can point the updater at an **alternate template**
+  (`--mzbatch <your_template>`) for a different method.
 - **MS2Deepscore & DreaMS networking** — these run **inside the MZmine batch** as molecular-networking
   steps for normal-sized projects. For very large projects they can be computed **separately on a
   GPU** (they are the memory-heaviest steps) and merged back in.
@@ -146,7 +168,7 @@ UT_Metabolomics_Pipeline/
 └── docs/                          ← the numbered walkthroughs above
 ```
 
-## Status & roadmap
+## Roadmap
 
 Working today (run step-by-step as documented):
 
@@ -160,11 +182,13 @@ Planned:
 
 - ◻ **Snakemake** wrapper — one command from sample sheet to results, with memory-aware scheduling
 - ◻ Small demo dataset + a CI `--dry-run` check
-- ◻ Optional downstream eCOMET (R) handoff
+- ◻ Downstream **eCOMET** (R) handoff for statistics, plots, and figures
 
-## Author
+## Acknowledgments & citation
 
-Developed by **Dale Forrister** (Sedio Lab, UT Austin), on the UT Austin BRCF POD cluster. Built on
-the open-source [MZmine](https://mzio.io/), [SIRIUS](https://bio.informatik.uni-jena.de/software/sirius/),
-and [DreaMS](https://github.com/pluskal-lab/DreaMS) projects — please cite those tools when you use
-this pipeline.
+Developed by **Dale Forrister** (Sedio Lab, UT Austin). This work relies on two UT Austin core
+facilities — the **Biological Mass Spectrometry Facility** (RRID:SCR_021728) and the **Biomedical
+Research Computing Facility (BRCF)**; please acknowledge them (and the facility RRID) in publications
+that use this pipeline. Built on the open-source [MZmine](https://mzio.io/),
+[SIRIUS](https://bio.informatik.uni-jena.de/software/sirius/), and
+[DreaMS](https://github.com/pluskal-lab/DreaMS) projects — please cite those tools as well.
