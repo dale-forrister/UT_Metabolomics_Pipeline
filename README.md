@@ -33,10 +33,17 @@ flowchart TB
 
     RAW --> AUTO["🔄 MS_Autoconverter<br/>(nightly cron)"]
     INJ <-->|"nightly run · retries errors"| AUTO
-    AUTO --> MZML["📄 Converted mzML"]
-    MZML --> POD[("💾 POD storage")]
-    RAW -. backup .-> BOX[("☁️ UT_Box<br/>raw + converted")]
-    MZML -. backup .-> BOX
+    AUTO --> MZML
+
+    subgraph PODENV ["🖥️ BRCF Rental Pod"]
+        MZML["📄 Converted mzML"]
+        POD[("💾 POD storage")]
+        MZML --> POD
+    end
+
+    BOX[("☁️ UT_Box cloud storage<br/>raw + converted")]
+    POD <-. "backup: sync ↔ retrieve" .-> BOX
+    RAW -. backup .-> BOX
 
     TPL["⚙️ mzbatch template<br/>optimized for Sedio Lab<br/>gradient + MS settings"] --> MZ
     MZML --> MZ["🧬 MZmine processing"]
