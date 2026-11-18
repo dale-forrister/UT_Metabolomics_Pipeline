@@ -1,6 +1,6 @@
 # UT Metabolomics Pipeline
 
-**Author: [Dale Forrister](https://dale-forrister.github.io/)** · [website](https://dale-forrister.github.io/) · [GitHub](https://github.com/dale-forrister) — postdoctoral researcher, Sedio Lab, UT Austin
+**Author: [Dale Forrister](https://dale-forrister.github.io/)** · [website](https://dale-forrister.github.io/) · [GitHub](https://github.com/dale-forrister) —  Stengl-Wyer postdoctoral scholar, Integrative Biology, UT Austin 
 
 This repository is how the **[Sedio Lab](https://briansedio.weebly.com/)**
 (UT Austin) processes untargeted LC-MS/MS metabolomics data. You start with a sheet listing your
@@ -8,12 +8,12 @@ samples; the pipeline converts the raw instrument files, detects and groups feat
 samples, builds molecular networks, and annotates the features with **SIRIUS** (and, optionally,
 **DreaMS** spectral embeddings).
 
-It is a set of **documented steps you run yourself** — not a black box. Each step is one command,
-and the [`docs/`](docs/) walkthroughs explain both *how* to run it and *why* the parameters are set
-the way they are. New here? Start with **[Getting Started](docs/getting_started.md)**, then follow
-Parts 1→5 in order.
+This repo provides detailed documentation for how it can be deployed and used to process metabolomics datasets  processed  in the Sedio_Lab or more generally at UT Austin's Biological Mass Spectrometry Facility.   
+The [`docs/`](docs/) walkthroughs provide more details for each step.  
 
-### Built on two UT Austin core facilities
+Most steps are run on the Biomedical Research Computing Facilities (BRFC) Rental Pod and an account in the Sedio group is requied. See thier user wiki and [Getting Started](docs/getting_started.md)**,  to learn to connect and create a step.  
+
+### This pipeline is Built on two UT Austin core facilities
 
 - **[Biological Mass Spectrometry Facility](https://research.utexas.edu/cbrs/facilities/)**
   (UT CBRS; RRID:SCR_021728) — samples are run here on a high-resolution **Thermo Orbitrap**
@@ -23,69 +23,27 @@ Parts 1→5 in order.
   — all processing runs on its shared "POD" cluster
   ([users wiki](https://cloud.wikis.utexas.edu/wiki/spaces/RCTFusers)).
 
-## How it works
+## Overview of Pipeline
 
-```mermaid
-flowchart LR
-    SAMPLE["🧪 Sample submitted to<br/>UT Biological Mass Spec Facility<br/>(Thermo Orbitrap UPLC-MS/MS)"]
-    SAMPLE --> RAW["📄 RAW data"]
-    SAMPLE --> INJ[("🗄️ UPLC_Injections<br/>metadata (SQL database)")]
-    TPL["⚙️ mzbatch template<br/>(Sedio Lab gradient + MS settings)"]
-    BOX[("☁️ UT_Box cloud storage<br/>raw + converted")]
+![UT Metabolomics Pipeline overview](docs/UT_pipeline_overview.png)
 
-    subgraph POD ["🖥️ BRCF Rental Pod — every step below runs here"]
-        direction LR
-        AUTO["🔄 MS_Autoconverter<br/>(nightly cron)"]
-        MZML["📄 Converted mzML<br/>(stored on the pod)"]
-        MZ["🧬 MZmine processing"]
-        QT["📋 quant_table"]
-        MN["🕸️ molecular_networking"]
-        LIB["🔖 local library<br/>annotations"]
-        SX["📄 SIRIUS export"]
-        SIR["🔬 SIRIUS"]
-        ECO["📦 eCOMET (R)"]
 
-        AUTO --> MZML --> MZ
-        MZ --> QT
-        MZ --> MN
-        MZ --> LIB
-        MZ --> SX --> SIR
-        QT --> ECO
-        MN --> ECO
-        LIB --> ECO
-        SIR --> ECO
-    end
+## Pipeline Processing steps
 
-    RAW --> AUTO
-    INJ <-->|"nightly · retries errors"| AUTO
-    TPL --> MZ
-    MZML <-. "backup: sync ↔ retrieve" .-> BOX
-    RAW -. backup .-> BOX
-    MZ --> GX["📄 GNPS export"] --> GNPS["🌐 GNPS / FBMN"]
-    ECO --> FINAL["📊 Statistical analysis,<br/>plots & manuscripts"]
+The numbered steps match the diagram above.
 
-    style POD fill:#dbe7f5,stroke:#3b6fb5,stroke-width:2px
-```
+| # | Step | Tool (version) | Output | Learn more |
+|---|---|---|---|---|
+| **1** | Submit sample & build the metadata sheet | UT Biological Mass Spec Facility (Thermo Orbitrap) · `check_metadata.py` | validated sample sheet | [Part 1 — Metadata](docs/metabolomics_pipeline_part_1.md) |
+| **2** | Convert RAW → mzML | MS_Autoconverter (nightly) or manual CSV · MSConvert / ProteoWizard | MS-only `.mzML` | [ms_auto_converter repo ↗](https://github.com/dale-forrister/ms_auto_converter) |
+| **3** | Feature processing | MZmine 4.10.90 (+ Sedio-Lab mzbatch template) | quant table, molecular networks, GNPS & SIRIUS exports | [Part 3 — MZmine](docs/metabolomics_pipeline_part_3.md) |
+| **4** | Structural annotation | SIRIUS 6.5.4 (CSI:FingerID, CANOPUS) | formulas, structures, fingerprints, compound classes | [Part 4 — SIRIUS & DreaMS](docs/metabolomics_pipeline_part_4.md) |
+| **5** | Ecometabolomic analysis | eCOMET (R package) | diversity & enrichment statistics, plots | [eCOMET package ↗](https://github.com/phytoecia/eCOMET) |
 
-> **Two different MGF exports** come out of MZmine and feed different tools — this trips people up:
-> **SIRIUS** uses `*_sirius.mgf` (the *SIRIUS export*: the full per-feature MS1 isotope pattern + its
-> MS2 scans, so SIRIUS sees all the fragmentation data). The *GNPS export* `*_iimn_gnps.mgf` (one
-> merged consensus spectrum per feature) is what goes to **GNPS/FBMN** and to **DreaMS** embeddings.
-
-## Pipeline at a glance
-
-| Step | Tool (version) | Script in this repo | Output |
-|---|---|---|---|
-| 1. Metadata & setup | sample sheet (`.tsv`/`.csv`) + `check_metadata.py` | `code/mzmine_processing/check_metadata.py` | validated sample list |
-| 2. Convert RAW → mzML | **MSConvert** (ProteoWizard `pwiz` Docker) | `ms_auto_converter` (auto) / `msconvert-batch.py` (manual) | MS-only (or +UV) `.mzML` |
-| 3a. Build MZmine batch | batch updater (fills the template from your metadata) | `code/mzmine_processing/update_mzmine_batch.py` | run-ready `.mzbatch` |
-| 3b. Feature finding + networking | **MZmine 4.10.90** | `resources/mzbatch/` template | quant table, compound groups, GNPS & SIRIUS MGFs, FBMN/IIMN graphs |
-| 4. Structural annotation | **SIRIUS 6.5.4** (CSI:FingerID, CANOPUS) | `code/sirius_batch_processing/` | formula, structure, fingerprint, compound-class tables |
-| 4. Spectral embeddings (optional) | **DreaMS** (PyTorch) | see [Part 4](docs/metabolomics_pipeline_part_4.md) | per-feature embeddings |
-| 5. SIRIUS at scale | chunked, resumable runner | `code/sirius_batch_processing/` | the Part-4 tables, for large projects |
-
-Also uses: **rclone** (UT_Box transfers), **Python 3** + pandas. Everything is pre-installed on POD
-under `/stor/work/Sedio/software` and `/stor/work/Sedio/conda_envs` — you do not install anything.
+Also in the pipeline: **MS2Deepscore / DreaMS** molecular networking (optional; can run
+GPU-accelerated for large datasets — the "AMD Pod" in the diagram), **SIRIUS at scale** (chunked,
+resumable; see [Part 5](docs/metabolomics_pipeline_part_5.md)), and **GNPS / FBMN** export. Built with
+**rclone**, **Python 3** + pandas — all pre-installed on POD, nothing to install.
 
 ## What you provide: the sample sheet
 
